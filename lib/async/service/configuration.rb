@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
 # Released under the MIT License.
-# Copyright, 2019-2023, by Samuel Williams.
-# Copyright, 2019, by Sho Ito.
+# Copyright, 2024, by Samuel Williams.
 
-require 'build/environment'
+require_relative 'loader'
+require_relative 'generic'
 
 module Async
 	module Service
@@ -14,48 +14,30 @@ module Async
 		class Configuration
 			# Initialize an empty configuration.
 			def initialize
-				@environments = {}
+				@environments = []
 			end
 			
-			# The map of named environments.
-			# @attribute [Hash(String, Build::Environment)]
-			attr :environments
+			def empty?
+				@environments.empty?
+			end
 			
-			# Enumerate all environments that have the specified key.
-			# @parameter key [Symbol] Filter environments that don't have this key.
-			def each(key = :authority)
-				return to_enum(key) unless block_given?
+			def services
+				return to_enum(:services) unless block_given?
 				
-				@environments.each do |name, environment|
-					environment = environment.flatten
-					
-					if environment.include?(key)
-						yield environment
-					end
+				@environments.each do |environment|
+					yield Generic.wrap(environment)
 				end
 			end
 			
-			# Add the named environment to the configuration.
+			# Add the environment to the configuration.
 			def add(environment)
-				name = environment.name
-				
-				unless name
-					raise ArgumentError, "Environment name is nil #{environment.inspect}"
-				end
-				
-				environment = environment.flatten
-				
-				raise KeyError.new("#{name.inspect} is already set", key: name) if @environments.key?(name)
-				
-				@environments[name] = environment
+				@environments << environment
 			end
 			
 			# Load the specified configuration file. See {Loader#load_file} for more details.
 			def load_file(path)
 				Loader.load_file(self, path)
 			end
-			
-
 		end
 	end
 end
