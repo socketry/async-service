@@ -1,4 +1,11 @@
 
+LogLevel = environment do
+	log_level :info
+end
+
 service "test" do
-	authority :name
+	include LogLevel
+	
+	authority {self.name}
+	middleware {Object.new}
 end

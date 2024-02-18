@@ -14,7 +14,7 @@ describe Async::Service::Environment do
 	it 'can evaluate nested values' do
 		environment = subject.new do
 			other_key 'other value'
-			my_key :other_key
+			my_key {other_key}
 		end
 		
 		expect(environment.to_h).to have_keys(my_key: be == 'other value')

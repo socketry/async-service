@@ -26,23 +26,28 @@ module Async
 			# @parameter configuration [Configuration]
 			# @oaram path [String] The path to the configuration file, e.g. `falcon.rb`.
 			def self.load_file(configuration, path)
-				path = File.realpath(path)
-				root = File.dirname(path)
+				path = ::File.realpath(path)
+				root = ::File.dirname(path)
 				
 				loader = self.new(configuration, root)
 				
-				if Module.method_defined?(:set_temporary_name)
+				if ::Module.method_defined?(:set_temporary_name)
 					loader.singleton_class.set_temporary_name("#{self}[#{path.inspect}]")
 				end
 				
 				loader.instance_eval(File.read(path), path)
 			end
 			
+			# Create an environment.
+			def environment(**initial, &block)
+				Environment.new(**initial, &block)
+			end
+			
 			# Define a host with the specified name.
 			# Adds `root` and `authority` keys.
 			# @parameter name [String] The name of the environment, usually a hostname.
 			def service(name, &block)
-				@configuration.add(Environment.new(name: name, root: @root, &block))
+				@configuration.add(self.environment(name: name, root: @root, &block))
 			end
 		end
 	end

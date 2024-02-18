@@ -11,8 +11,22 @@ describe Async::Service::Configuration do
 			
 			expect(configuration).not.to be(:empty?)
 			
-			service = configuration.services.first
-			expect(service).to be_a(Async::Service::Generic)
+			environment = configuration.environments.first
+			evaluator = environment.evaluator
+			expect(evaluator.name).to be == 'test'
+			expect(evaluator.log_level).to be == :info
+		end
+		
+		it 'evaluates the value multiple times' do
+			configuration = subject.new
+			
+			configuration.load_file(File.join(__dir__, '.configurations', 'basic.rb'))
+			
+			environment = configuration.environments.first
+			evaluator = environment.evaluator
+			
+			middleware = evaluator.middleware
+			expect(evaluator.middleware).not.to be_equal(middleware)
 		end
 	end
 end

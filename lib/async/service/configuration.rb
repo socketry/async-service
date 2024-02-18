@@ -17,6 +17,8 @@ module Async
 				@environments = []
 			end
 			
+			attr :environments
+			
 			def empty?
 				@environments.empty?
 			end

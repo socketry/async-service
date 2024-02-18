@@ -7,19 +7,17 @@
 module Async
 	module Service
 		class Environment
-			class Evaluator
+			class Builder < BasicObject
 				def self.for(initial, block)
-					self.new(initial.dup).tap do |evaluator|
-						evaluator.instance_eval(&block)
-					end
+					builder = self.new(initial.dup)
+					
+					builder.instance_exec(&block)
+					
+					return builder
 				end
 				
 				def initialize(cache = Hash.new)
 					@cache = cache
-				end
-				
-				def [](key)
-					@cache[key]
 				end
 				
 				def []=(key, value)
@@ -35,11 +33,16 @@ module Async
 				def method_missing(name, argument = nil, &block)
 					previous = @cache[name]
 					
-					if block_given?
-						@cache[name] = lambda{block.call(previous)}
-					elsif previous.is_a?(Array)
-						@cache[name] = previous + Array(argument)
-					elsif previous.is_a?(Hash)
+					if block
+						if block.arity == 0
+							@cache[name] = block
+						else
+							# Bind the |previous| argument to the block:
+							@cache[name] = ::Kernel.lambda{self.instance_exec(previous, &block)}
+						end
+					elsif previous.is_a?(::Array)
+						@cache[name] = previous + argument
+					elsif previous.is_a?(::Hash)
 						@cache[name] = previous.merge(argument)
 					else
 						@cache[name] = argument
@@ -49,46 +52,71 @@ module Async
 				def to_h
 					@cache
 				end
+				
+				def key?(key)
+					@cache.key?(key)
+				end
 			end
 			
 			def initialize(**initial, &block)
 				@block = block
 				@initial = initial
-				@evaluator = nil
 			end
 			
-			def evaluator
-				Evaluator.for(@initial, @block)
+			def builder
+				Builder.for(@initial, @block)
 			end
 			
-			class Roller
-				def initialize(hash)
-					@hash = hash
+			class Evaluator < BasicObject
+				def initialize(cache)
+					@cache = cache
 				end
 				
-				def object_value(value)
+				private def __evaluate__(value)
 					case value
-					when Array
-						value.collect{|item| object_value(item)}.flatten
-					when Symbol
-						object_value(@hash[value])
-					when Proc
-						object_value(instance_exec(&value))
+					when ::Array
+						value.collect{|item| __evaluate__(item)}
+					when ::Hash
+						value.transform_values{|item| __evaluate__(item)}
+					# when ::Symbol
+					# 	__evaluate__(@cache[value])
+					when ::Proc
+						__evaluate__(instance_exec(&value))
 					else
 						value
 					end
 				end
 				
-				def flatten
-					@hash.transform_values(&self.method(:object_value))
+				def [](key)
+					__evaluate__(@cache[key])
+				end
+				
+				def respond_to?(name, include_all = false)
+					@cache.key?(name) || super
+				end
+				
+				def respond_to_missing?(name, include_all = false)
+					@cache.key?(name) || super
+				end
+				
+				def method_missing(name, ...)
+					if @cache.key?(name)
+						self[name]
+					end
+				end
+				
+				def to_h
+					__evaluate__(@cache)
 				end
 			end
 			
-			def flatten
-				Roller.new(evaluator.to_h).flatten
+			def evaluator
+				Evaluator.new(builder.to_h)
 			end
 			
-			alias to_h flatten
+			def to_h
+				evaluator.to_h
+			end
 		end
 	end
 end
