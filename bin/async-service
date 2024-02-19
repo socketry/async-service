@@ -11,14 +11,16 @@ end
 controller = Async::Service::Controller.new(configuration.services)
 
 begin
+	require 'bundler'
 	Bundler.require(:preload)
-rescue Bundler::GemfileNotFound
+rescue Bundler::GemfileNotFound, LoadError
 	# Ignore.
 end
 
 if Process.respond_to?(:warmup)
 	Process.warmup
 elsif GC.respond_to?(:compact)
+	3.times{GC.start}
 	GC.compact
 end
 

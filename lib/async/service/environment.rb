@@ -20,7 +20,7 @@ module Async
 				end
 				
 				def include(target)
-					target.to_h.each do |key, value|
+					target.each do |key, value|
 						@cache[key] = value
 					end
 				end
@@ -117,6 +117,10 @@ module Async
 			
 			def evaluator
 				Evaluator.new(builder.to_h)
+			end
+			
+			def each(&block)
+				builder.to_h.each(&block)
 			end
 			
 			def to_h
