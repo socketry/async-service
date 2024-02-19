@@ -1,7 +1,11 @@
 
 require 'async/service/generic'
+require 'async/service/environment'
 require 'console'
 require 'async/container'
+
+class MyService < Async::Service::Generic
+end
 
 describe Async::Service::Generic do
 	let(:environment) {Async::Service::Environment.new}
@@ -24,5 +28,18 @@ describe Async::Service::Generic do
 		
 		container = Async::Container.new
 		service.setup(container)
+	end
+	
+	with 'service class' do
+		let(:environment) do
+			Async::Service::Environment.new do
+				service_class MyService
+			end
+		end
+		
+		it 'can wrap a service and construct the right class' do
+			service = Async::Service::Generic.wrap(environment)
+			expect(service).to be_a(MyService)
+		end
 	end
 end

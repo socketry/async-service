@@ -46,7 +46,7 @@ service "sleep" do
 	authority {self.name}
 	middleware {Object.new}
 	
-	service SleepService
+	service_class SleepService
 end
 
 # A 2nd service:
