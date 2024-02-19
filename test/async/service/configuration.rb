@@ -8,6 +8,7 @@ require 'async/service/configuration'
 describe Async::Service::Configuration do
 	with 'sleep service configuration file' do
 		let(:configuration_path) {File.join(__dir__, '.configurations', 'sleep.rb')}
+		let(:configuration_root) {File.join(File.realpath(__dir__), '.configurations')}
 		
 		let(:configuration) do
 			subject.new.tap do |configuration|
@@ -29,7 +30,7 @@ describe Async::Service::Configuration do
 			expect(service.name).to be == 'sleep'
 			expect(service.to_h).to have_keys(
 				name: be == 'sleep',
-				root: be == File.dirname(configuration_path),
+				root: be == configuration_root,
 			)
 		end
 		

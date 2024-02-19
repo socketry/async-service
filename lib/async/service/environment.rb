@@ -10,12 +10,12 @@ module Async
 				def self.for(initial, block)
 					builder = self.new(initial.dup)
 					
-					builder.instance_exec(&block)
+					builder.instance_exec(&block) if block
 					
 					return builder
 				end
 				
-				def initialize(cache = Hash.new)
+				def initialize(cache = ::Hash.new)
 					@cache = cache
 				end
 				
@@ -47,10 +47,6 @@ module Async
 				def to_h
 					@cache
 				end
-				
-				def key?(key)
-					@cache.key?(key)
-				end
 			end
 			
 			def initialize(**initial, &block)
@@ -68,6 +64,10 @@ module Async
 				def initialize(source)
 					@source = source
 					@cache = {}
+				end
+				
+				def inspect
+					"#<#{Evaluator} #{@source}>"
 				end
 				
 				private def __evaluate__(value)
@@ -95,13 +95,11 @@ module Async
 					@source.key?(name) || super
 				end
 				
-				def respond_to_missing?(name, include_all = false)
-					@source.key?(name) || super
-				end
-				
 				def method_missing(name, ...)
 					if @source.key?(name)
 						self[name]
+					else
+						super
 					end
 				end
 				

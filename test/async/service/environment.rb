@@ -69,4 +69,30 @@ describe Async::Service::Environment do
 		
 		expect(environment.to_h).to have_keys(my_key: be == 'value')
 	end
+	
+	with '#builder' do
+		it 'can generate hash' do
+			environment = subject.new do
+				my_key 'value'
+			end
+			
+			builder = environment.builder
+			expect(builder.to_h).to have_keys(my_key: be == 'value')
+		end
+	end
+
+	with '#evaluator' do
+		it 'can evaluate values' do
+			environment = subject.new do
+				my_proc {Object.new}
+			end
+			
+			evaluator = environment.evaluator
+			expect(evaluator.key?(:my_proc)).to be == true
+			expect(evaluator.respond_to?(:my_proc)).to be == true
+			expect(evaluator.my_proc).to be_a(Object)
+			
+			expect{evaluator.invalid_key}.to raise_exception(NoMethodError)
+		end
+	end
 end

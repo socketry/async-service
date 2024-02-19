@@ -30,13 +30,7 @@ module Async
 				@evaluator.to_h
 			end
 			
-			# Whether the service environment contains the specified keys.
-			# This is used for matching environment configuration to service behaviour.
-			def include?(keys)
-				keys.all?{|key| @evaluator.include?(key)}
-			end
-			
-			# The name of the service.
+			# The name of the service - used for informational purposes like logging.
 			# e.g. `myapp.com`.
 			def name
 				@evaluator.name

@@ -26,7 +26,8 @@ module Async
 			# @parameter configuration [Configuration]
 			# @oaram path [String] The path to the configuration file, e.g. `falcon.rb`.
 			def self.load_file(configuration, path)
-				root = ::File.dirname(path)
+				realpath = ::File.realpath(path)
+				root = ::File.dirname(realpath)
 				
 				loader = self.new(configuration, root)
 				
