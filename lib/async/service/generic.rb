@@ -26,10 +26,14 @@ module Async
 				@evaluator = @environment.evaluator
 			end
 			
+			def to_h
+				@evaluator.to_h
+			end
+			
 			# Whether the service environment contains the specified keys.
 			# This is used for matching environment configuration to service behaviour.
 			def include?(keys)
-				keys.all?{|key| @environment.include?(key)}
+				keys.all?{|key| @evaluator.include?(key)}
 			end
 			
 			# The name of the service.
@@ -40,15 +44,18 @@ module Async
 			
 			# Start the service.
 			def start
+				Console.debug(self) {"Starting service #{self.name}..."}
 			end
 			
 			# Setup the service into the specified container.
 			# @parameter container [Async::Container::Generic]
 			def setup(container)
+				Console.debug(self) {"Setting up service #{self.name}..."}
 			end
 			
 			# Stop the service.
-			def stop
+			def stop(graceful = true)
+				Console.debug(self) {"Stopping service #{self.name}..."}
 			end
 		end
 	end

@@ -1,8 +1,7 @@
 # frozen_string_literal: true
 
 # Released under the MIT License.
-# Copyright, 2019-2023, by Samuel Williams.
-# Copyright, 2019, by Sho Ito.
+# Copyright, 2024, by Samuel Williams.
 
 module Async
 	module Service
@@ -67,9 +66,12 @@ module Async
 				Builder.for(@initial, @block)
 			end
 			
+			# An evaluator is lazy read-only view of an environment. It allows for the evaluation of procs and other dynamic values.
+			# Those values are cached, and thus the evaluator is not thread safe.
 			class Evaluator < BasicObject
-				def initialize(cache)
-					@cache = cache
+				def initialize(source)
+					@source = source
+					@cache = {}
 				end
 				
 				private def __evaluate__(value)
@@ -79,7 +81,7 @@ module Async
 					when ::Hash
 						value.transform_values{|item| __evaluate__(item)}
 					# when ::Symbol
-					# 	__evaluate__(@cache[value])
+					# 	self[value]
 					when ::Proc
 						__evaluate__(instance_exec(&value))
 					else
@@ -88,25 +90,34 @@ module Async
 				end
 				
 				def [](key)
-					__evaluate__(@cache[key])
+					@cache.fetch(key) do
+						@cache[key] = __evaluate__(@source[key])
+					end
 				end
 				
 				def respond_to?(name, include_all = false)
-					@cache.key?(name) || super
+					@source.key?(name) || super
 				end
 				
 				def respond_to_missing?(name, include_all = false)
-					@cache.key?(name) || super
+					@source.key?(name) || super
 				end
 				
 				def method_missing(name, ...)
-					if @cache.key?(name)
+					if @source.key?(name)
 						self[name]
 					end
 				end
 				
 				def to_h
-					__evaluate__(@cache)
+					# Ensure all keys are evaluated:
+					@source.each_key{|key| self[key]}
+					
+					return @cache
+				end
+				
+				def key?(key)
+					@source.key?(key)
 				end
 			end
 			

@@ -1,0 +1,25 @@
+#!/usr/bin/env ruby
+
+require 'async/service'
+
+configuration = Async::Service::Configuration.new
+
+ARGV.each do |path|
+	configuration.load_file(path)
+end
+
+controller = Async::Service::Controller.new(configuration.services)
+
+begin
+	Bundler.require(:preload)
+rescue Bundler::GemfileNotFound
+	# Ignore.
+end
+
+if Process.respond_to?(:warmup)
+	Process.warmup
+elsif GC.respond_to?(:compact)
+	GC.compact
+end
+
+controller.run

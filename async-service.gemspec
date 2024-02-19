@@ -19,7 +19,9 @@ Gem::Specification.new do |spec|
 		"documentation_uri" => "https://socketry.github.io/async-service/",
 	}
 	
-	spec.files = Dir.glob(['{lib}/**/*', '*.md'], File::FNM_DOTMATCH, base: __dir__)
+	spec.files = Dir.glob(['{bin,lib}/**/*', '*.md'], File::FNM_DOTMATCH, base: __dir__)
+	
+	spec.executables = ["async-service"]
 	
 	spec.required_ruby_version = ">= 3.0"
 	
