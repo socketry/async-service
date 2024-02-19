@@ -19,10 +19,6 @@ module Async
 					@cache = cache
 				end
 				
-				def []=(key, value)
-					@cache[key] = value
-				end
-				
 				def include(target)
 					target.to_h.each do |key, value|
 						@cache[key] = value
