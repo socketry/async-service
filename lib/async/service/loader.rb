@@ -38,6 +38,10 @@ module Async
 				loader.instance_eval(File.read(path), path)
 			end
 			
+			def load_file(path)
+				Loader.load_file(@configuration, File.expand_path(path, @root))
+			end
+			
 			# Create an environment.
 			def environment(**initial, &block)
 				Environment.new(**initial, &block)

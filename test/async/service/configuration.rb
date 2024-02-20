@@ -42,4 +42,22 @@ describe Async::Service::Configuration do
 			expect(environment.evaluator.middleware).not.to be_equal(middleware)
 		end
 	end
+	
+	with 'other configuration file' do
+		let(:configuration_path) {File.join(__dir__, '.configurations', 'other.rb')}
+		
+		let(:configuration) do
+			subject.new.tap do |configuration|
+				configuration.load_file(configuration_path)
+			end
+		end
+		
+		it 'can load a different configuration' do
+			expect(configuration).not.to be(:empty?)
+			
+			environment = configuration.environments.first
+			evaluator = environment.evaluator
+			expect(evaluator.name).to be == 'sleep'
+		end
+	end
 end
