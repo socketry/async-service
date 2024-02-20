@@ -8,7 +8,9 @@ require 'async/container/controller'
 module Async
 	module Service
 		class Controller < Async::Container::Controller
-			def initialize(services)
+			def initialize(services, **options)
+				super(**options)
+				
 				@services = services
 			end
 			
