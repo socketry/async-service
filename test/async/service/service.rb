@@ -32,7 +32,7 @@ describe Async::Service::Generic do
 	
 	with 'service class' do
 		let(:environment) do
-			Async::Service::Environment.new do
+			Async::Service::Environment.build do
 				service_class MyService
 			end
 		end

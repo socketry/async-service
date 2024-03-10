@@ -44,7 +44,7 @@ module Async
 			
 			# Create an environment.
 			def environment(**initial, &block)
-				Environment.new(**initial, &block)
+				Environment.build(**initial, &block)
 			end
 			
 			# Define a host with the specified name.

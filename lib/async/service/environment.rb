@@ -7,120 +7,124 @@ module Async
 	module Service
 		class Environment
 			class Builder < BasicObject
-				def self.for(initial, block)
-					builder = self.new(initial.dup)
+				def self.wrap(hash, facet = ::Module.new)
+					hash.each do |key, value|
+						if value.is_a?(::Proc)
+							facet.define_method(key, &value)
+						else
+							facet.define_method(key){value}
+						end
+					end
 					
-					builder.instance_exec(&block) if block
-					
-					return builder
+					return facet
 				end
 				
-				def initialize(cache = ::Hash.new)
-					@cache = cache
+				def self.for(facet = ::Module.new, &block)
+					builder = self.new(facet)
+					
+					builder.instance_exec(&block) if block_given?
+					
+					return facet
+				end
+				
+				def initialize(facet = ::Module.new)
+					@facet = facet
 				end
 				
 				def include(target)
-					target.each do |key, value|
-						@cache[key] = value
+					if target.is_a?(::Module)
+						@facet.include(target)
+					elsif target.respond_to?(:included)
+						target.included(@facet)
+					else
+						raise ::ArgumentError, "Cannot include #{target.inspect} into #{@facet}"
 					end
 				end
 				
 				def method_missing(name, argument = nil, &block)
-					previous = @cache[name]
-					
 					if block
-						if block.arity == 0
-							@cache[name] = block
-						else
-							# Bind the |previous| argument to the block:
-							@cache[name] = ::Kernel.lambda{self.instance_exec(previous, &block)}
-						end
-					elsif previous.is_a?(::Array)
-						@cache[name] = previous + argument
-					elsif previous.is_a?(::Hash)
-						@cache[name] = previous.merge(argument)
+						@facet.define_method(name, &block)
 					else
-						@cache[name] = argument
+						@facet.define_method(name){argument}
 					end
 				end
-				
-				def to_h
-					@cache
+			end
+			
+			def self.build(**values, &block)
+				if values.any?
+					environment = Environment.new(Builder.wrap(values))
 				end
+				
+				if block_given?
+					environment = Environment.new(Builder.for(&block), environment)
+				end
+				
+				return environment
 			end
 			
-			def initialize(**initial, &block)
-				@block = block
-				@initial = initial
+			def initialize(facet = ::Module.new, parent = nil)
+				@facet = facet
+				@parent = parent
 			end
 			
-			def builder
-				Builder.for(@initial, @block)
+			def included(target)
+				@parent&.included(target)
+				target.include(@facet)
 			end
 			
 			# An evaluator is lazy read-only view of an environment. It allows for the evaluation of procs and other dynamic values.
 			# Those values are cached, and thus the evaluator is not thread safe.
-			class Evaluator < BasicObject
-				def initialize(source)
-					@source = source
+			class Evaluator
+				def self.wrap(environment)
+					evaluator = ::Class.new(self)
+					
+					facet = ::Module.new
+					environment.included(facet)
+					
+					evaluator.include(facet)
+					
+					# Memoize all instance methods:
+					facet.instance_methods.each do |name|
+						evaluator.define_method(name) do
+							@cache[name] ||= super()
+						end
+					end
+					
+					evaluator.define_method(:keys) do
+						facet.instance_methods
+					end
+					
+					return evaluator.new
+				end
+				
+				def initialize
 					@cache = {}
 				end
 				
 				def inspect
-					"#<#{Evaluator} #{@source}>"
-				end
-				
-				private def __evaluate__(value)
-					case value
-					when ::Array
-						value.collect{|item| __evaluate__(item)}
-					when ::Hash
-						value.transform_values{|item| __evaluate__(item)}
-					# when ::Symbol
-					# 	self[value]
-					when ::Proc
-						__evaluate__(instance_exec(&value))
-					else
-						value
-					end
-				end
-				
-				def [](key)
-					@cache.fetch(key) do
-						@cache[key] = __evaluate__(@source[key])
-					end
-				end
-				
-				def respond_to?(name, include_all = false)
-					@source.key?(name) || super
-				end
-				
-				def method_missing(name, ...)
-					if @source.key?(name)
-						self[name]
-					else
-						super
-					end
+					"#<#{Evaluator} #{self.keys}>"
 				end
 				
 				def to_h
 					# Ensure all keys are evaluated:
-					@source.each_key{|key| self[key]}
+					self.keys.each do |name|
+						self.__send__(name)
+					end
 					
 					return @cache
 				end
 				
+				def [](key)
+					self.__send__(key)
+				end
+				
 				def key?(key)
-					@source.key?(key)
+					self.keys.include?(key)
 				end
 			end
 			
 			def evaluator
-				Evaluator.new(builder.to_h)
-			end
-			
-			def each(&block)
-				builder.to_h.each(&block)
+				return Evaluator.wrap(self)
 			end
 			
 			def to_h
