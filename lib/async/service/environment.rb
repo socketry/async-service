@@ -32,7 +32,7 @@ module Async
 				end
 				
 				def include(target)
-					if target.is_a?(::Module)
+					if target.class == ::Module
 						@facet.include(target)
 					elsif target.respond_to?(:included)
 						target.included(@facet)
@@ -72,8 +72,7 @@ module Async
 				target.include(@facet)
 			end
 			
-			# An evaluator is lazy read-only view of an environment. It allows for the evaluation of procs and other dynamic values.
-			# Those values are cached, and thus the evaluator is not thread safe.
+			# An evaluator is lazy read-only view of an environment. It memoizes all method calls.
 			class Evaluator
 				def self.wrap(environment)
 					evaluator = ::Class.new(self)
