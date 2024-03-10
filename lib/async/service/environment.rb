@@ -37,7 +37,7 @@ module Async
 					elsif target.respond_to?(:included)
 						target.included(@facet)
 					else
-						raise ::ArgumentError, "Cannot include #{target.inspect} into #{@facet}"
+						::Kernel.raise ::ArgumentError, "Cannot include #{target.inspect} into #{@facet.inspect}!"
 					end
 				end
 				
