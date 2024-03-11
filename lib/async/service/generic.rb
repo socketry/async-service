@@ -14,16 +14,17 @@ module Async
 			# @parameter environment [Build::Environment] The environment to use to construct the service.
 			def self.wrap(environment)
 				evaluator = environment.evaluator
-				service_class = evaluator.service_class || self
 				
-				return service_class.new(environment)
+				if service_class = evaluator.service_class || self
+					return service_class.new(environment, evaluator)
+				end
 			end
 			
 			# Initialize the service from the given environment.
 			# @parameter environment [Build::Environment]
-			def initialize(environment)
+			def initialize(environment, evaluator = environment.evaluator)
 				@environment = environment
-				@evaluator = @environment.evaluator
+				@evaluator = evaluator
 			end
 			
 			def to_h
