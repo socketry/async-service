@@ -24,8 +24,8 @@ module Async
 				end
 			end
 			
-			def self.run(configuration)
-				controller = Async::Service::Controller.new(configuration.services.to_a)
+			def self.run(configuration, **options)
+				controller = Async::Service::Controller.new(configuration.services.to_a, **options)
 				
 				self.warmup
 				
