@@ -8,6 +8,30 @@ require 'async/container/controller'
 module Async
 	module Service
 		class Controller < Async::Container::Controller
+			def self.warmup
+				begin
+					require 'bundler'
+					Bundler.require(:preload)
+				rescue Bundler::GemfileNotFound, LoadError
+					# Ignore.
+				end
+				
+				if Process.respond_to?(:warmup)
+					Process.warmup
+				elsif GC.respond_to?(:compact)
+					3.times{GC.start}
+					GC.compact
+				end
+			end
+			
+			def self.run(configuration)
+				controller = Async::Service::Controller.new(configuration.services.to_a)
+				
+				self.warmup
+				
+				controller.run
+			end
+			
 			def initialize(services, **options)
 				super(**options)
 				
@@ -23,7 +47,7 @@ module Async
 				super
 			end
 			
-			# Setup all named services into the given container.
+			# Setup all services into the given container.
 			#
 			# @parameter container [Async::Container::Generic]
 			def setup(container)

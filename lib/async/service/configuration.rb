@@ -12,6 +12,16 @@ module Async
 		#
 		# Environments are key-value maps with lazy value resolution. An environment can inherit from a parent environment, which can provide defaults
 		class Configuration
+			def self.load(paths = ARGV)
+				configuration = self.new
+				
+				paths.each do |path|
+					configuration.load_file(path)
+				end
+				
+				return configuration
+			end
+			
 			# Initialize an empty configuration.
 			def initialize
 				@environments = []

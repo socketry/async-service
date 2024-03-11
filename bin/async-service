@@ -2,26 +2,5 @@
 
 require 'async/service'
 
-configuration = Async::Service::Configuration.new
-
-ARGV.each do |path|
-	configuration.load_file(path)
-end
-
-controller = Async::Service::Controller.new(configuration.services)
-
-begin
-	require 'bundler'
-	Bundler.require(:preload)
-rescue Bundler::GemfileNotFound, LoadError
-	# Ignore.
-end
-
-if Process.respond_to?(:warmup)
-	Process.warmup
-elsif GC.respond_to?(:compact)
-	3.times{GC.start}
-	GC.compact
-end
-
-controller.run
+configuration = Async::Service::Configuration.load
+Async::Service::Controller.run(configuration)
