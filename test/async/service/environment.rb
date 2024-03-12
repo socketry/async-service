@@ -38,7 +38,7 @@ describe Async::Service::Environment do
 	end
 	
 	it 'can evaluate blocks with previous value' do
-		environment = subject.build(my_key: 'value') do
+		environment = subject.build(my_key: 'value').with do
 			my_key {'other value;' + super()}
 		end
 		

@@ -7,20 +7,16 @@ module Async
 	module Service
 		class Environment
 			class Builder < BasicObject
-				def self.wrap(hash, facet = ::Module.new)
-					hash.each do |key, value|
+				def self.for(facet = ::Module.new, **values, &block)
+					builder = self.new(facet)
+					
+					values.each do |key, value|
 						if value.is_a?(::Proc)
 							facet.define_method(key, &value)
 						else
 							facet.define_method(key){value}
 						end
 					end
-					
-					return facet
-				end
-				
-				def self.for(facet = ::Module.new, &block)
-					builder = self.new(facet)
 					
 					builder.instance_exec(&block) if block_given?
 					
@@ -50,16 +46,8 @@ module Async
 				end
 			end
 			
-			def self.build(**values, &block)
-				if values.any?
-					environment = Environment.new(Builder.wrap(values))
-				end
-				
-				if block_given?
-					environment = Environment.new(Builder.for(&block), environment)
-				end
-				
-				return environment
+			def self.build(...)
+				Environment.new(Builder.for(...))
 			end
 			
 			def initialize(facet = ::Module.new, parent = nil)
@@ -70,6 +58,10 @@ module Async
 			def included(target)
 				@parent&.included(target)
 				target.include(@facet)
+			end
+			
+			def with(...)
+				return self.class.new(Builder.for(...), self)
 			end
 			
 			# An evaluator is lazy read-only view of an environment. It memoizes all method calls.
