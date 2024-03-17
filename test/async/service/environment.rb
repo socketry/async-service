@@ -12,6 +12,10 @@ module MyEnvironment
 end
 
 describe Async::Service::Environment do
+	it 'must be provided a module' do
+		expect{subject.new(Object)}.to raise_exception(ArgumentError)
+	end
+	
 	it 'can evaluate values' do
 		environment = subject.build do
 			my_key 'value'

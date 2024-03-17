@@ -51,6 +51,10 @@ module Async
 			end
 			
 			def initialize(facet = ::Module.new, parent = nil)
+				unless facet.class == ::Module
+					raise ArgumentError, "Facet must be a module!"
+				end
+				
 				@facet = facet
 				@parent = parent
 			end
