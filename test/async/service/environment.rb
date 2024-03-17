@@ -9,6 +9,10 @@ module MyEnvironment
 	def my_key
 		'value'
 	end
+	
+	def my_method(x, y)
+		x + y
+	end
 end
 
 describe Async::Service::Environment do
@@ -22,6 +26,15 @@ describe Async::Service::Environment do
 		end
 		
 		expect(environment.to_h).to have_keys(my_key: be == 'value')
+	end
+	
+	it 'can evaluate methods' do
+		environment = subject.build do
+			include MyEnvironment
+			my_key {my_method(1, 2)}
+		end
+		
+		expect(environment.to_h).to have_keys(my_key: be == 3)
 	end
 	
 	it 'can evaluate nested values' do

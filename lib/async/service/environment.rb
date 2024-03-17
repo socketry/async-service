@@ -78,16 +78,24 @@ module Async
 					
 					evaluator.include(facet)
 					
+					keys = []
+					
 					# Memoize all instance methods:
 					facet.instance_methods.each do |name|
-						evaluator.define_method(name) do
-							@cache[name] ||= super()
+						instance_method = facet.instance_method(name)
+						
+						# Only memoize methods with no arguments:
+						if instance_method.arity == 0
+							keys << name
+							
+							evaluator.define_method(name) do
+								@cache[name] ||= super()
+							end
 						end
 					end
 					
-					evaluator.define_method(:keys) do
-						facet.instance_methods
-					end
+					# This lists all zero-argument methods:
+					evaluator.define_method(:keys) {keys}
 					
 					return evaluator.new
 				end
