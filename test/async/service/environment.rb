@@ -95,6 +95,14 @@ describe Async::Service::Environment do
 			
 			expect{evaluator.invalid_key}.to raise_exception(NoMethodError)
 		end
+		
+		it 'can generate JSON' do
+			environment = subject.build do
+				my_key 'value'
+			end
+			
+			expect(environment.evaluator.to_json).to be == '{"my_key":"value"}'
+		end
 	end
 	
 	with '#implements?' do

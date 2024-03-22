@@ -133,6 +133,10 @@ module Async
 					return @cache
 				end
 				
+				def to_json(...)
+					self.to_h.to_json(...)
+				end
+				
 				def [](key)
 					self.__send__(key)
 				end
