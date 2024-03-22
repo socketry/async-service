@@ -5,6 +5,7 @@
 
 require_relative 'loader'
 require_relative 'generic'
+require_relative 'controller'
 
 module Async
 	module Service
@@ -33,12 +34,18 @@ module Async
 				@environments.empty?
 			end
 			
-			def services
-				return to_enum(:services) unless block_given?
+			def services(implementing: nil)
+				return to_enum(:services, implementing: implementing) unless block_given?
 				
 				@environments.each do |environment|
+					next if implementing and environment.implements?(implementing)
+					
 					yield Generic.wrap(environment)
 				end
+			end
+			
+			def controller(**options)
+				Controller.new(self.services(**options).to_a)
 			end
 			
 			# Add the environment to the configuration.

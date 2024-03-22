@@ -38,6 +38,10 @@ module Async
 				@services = services
 			end
 			
+			# All the services associated with this controller.
+			# @attribute [Array(Async::Service::Generic)] 
+			attr :services
+			
 			# Start all named services.
 			def start
 				@services.each do |service|

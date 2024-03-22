@@ -96,4 +96,21 @@ describe Async::Service::Environment do
 			expect{evaluator.invalid_key}.to raise_exception(NoMethodError)
 		end
 	end
+	
+	with '#implements?' do
+		it 'can check if environment implements a module' do
+			environment = subject.build do
+				include MyEnvironment
+			end
+			
+			expect(environment).to be(:implements?, MyEnvironment)
+		end
+		
+		it 'can check if environment implements a module' do
+			environment = subject.build do
+			end
+			
+			expect(environment).not.to be(:implements?, MyEnvironment)
+		end
+	end
 end

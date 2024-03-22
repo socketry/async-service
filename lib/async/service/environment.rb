@@ -59,6 +59,12 @@ module Async
 				@parent = parent
 			end
 			
+			# @attribute [Module] The facet module.
+			attr :facet
+			
+			# @attribute [Environment | Nil] The parent environment, if any.
+			attr :parent
+			
 			def included(target)
 				@parent&.included(target)
 				target.include(@facet)
@@ -66,6 +72,10 @@ module Async
 			
 			def with(...)
 				return self.class.new(Builder.for(...), self)
+			end
+			
+			def implements?(interface)
+				@facet <= interface
 			end
 			
 			# An evaluator is lazy read-only view of an environment. It memoizes all method calls.

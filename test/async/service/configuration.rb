@@ -41,6 +41,15 @@ describe Async::Service::Configuration do
 			middleware = evaluator.middleware
 			expect(environment.evaluator.middleware).not.to be_equal(middleware)
 		end
+		
+		it 'can create a controller' do
+			controller = configuration.controller
+			expect(controller).to be_a(Async::Service::Controller)
+			
+			expect(controller.services).to have_attributes(
+				size: be == 1
+			)
+		end
 	end
 	
 	with 'other configuration file' do
