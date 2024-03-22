@@ -7,20 +7,26 @@ module Async
 	module Service
 		class Environment
 			class Builder < BasicObject
-				def self.for(facet = ::Module.new, **values, &block)
-					builder = self.new(facet)
+				def self.for(*facets, **values, &block)
+					top = ::Module.new
+					
+					builder = self.new(top)
+					
+					facets.each do |facet|
+						builder.include(facet)
+					end
 					
 					values.each do |key, value|
 						if value.is_a?(::Proc)
-							facet.define_method(key, &value)
+							builder.method_missing(key, &value)
 						else
-							facet.define_method(key){value}
+							builder.method_missing(key, value)
 						end
 					end
 					
 					builder.instance_exec(&block) if block_given?
 					
-					return facet
+					return top
 				end
 				
 				def initialize(facet = ::Module.new)
