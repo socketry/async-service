@@ -6,6 +6,15 @@
 require 'async/service/configuration'
 
 describe Async::Service::Configuration do
+	with '.for' do
+		it "can create a new configuration" do
+			environment = Async::Service::Environment.new
+			configuration = subject.for(environment)
+			
+			expect(configuration.environments).to be(:include?, environment)
+		end
+	end
+	
 	with 'sleep service configuration file' do
 		let(:configuration_path) {File.join(__dir__, '.configurations', 'sleep.rb')}
 		let(:configuration_root) {File.join(File.realpath(__dir__), '.configurations')}

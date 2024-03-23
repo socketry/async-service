@@ -23,9 +23,13 @@ module Async
 				return configuration
 			end
 			
+			def self.for(*environments)
+				self.new(environments)
+			end
+			
 			# Initialize an empty configuration.
-			def initialize
-				@environments = []
+			def initialize(environments = [])
+				@environments = environments
 			end
 			
 			attr :environments
