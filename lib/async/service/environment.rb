@@ -24,7 +24,24 @@ module Async
 						end
 					end
 					
-					builder.instance_exec(&block) if block_given?
+					# This allows for a convenient syntax, e.g.:
+					#
+					# 	Builder.for do
+					# 		foo 42
+					# 	end
+					#
+					# or:
+					#
+					# 	Builder.for do |builder|
+					# 		builder.foo 42
+					# 	end 
+					if block_given?
+						if block.arity == 0
+							builder.instance_exec(&block)
+						else
+							yield builder
+						end
+					end
 					
 					return top
 				end

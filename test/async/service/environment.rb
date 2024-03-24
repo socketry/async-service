@@ -28,6 +28,14 @@ describe Async::Service::Environment do
 		expect(environment.to_h).to have_keys(my_key: be == 'value')
 	end
 	
+	it 'can use other methods' do
+		environment = subject.build do |builder|
+			builder.dir __dir__
+		end
+		
+		expect(environment.to_h).to have_keys(dir: be == __dir__)
+	end
+	
 	it 'can evaluate methods' do
 		environment = subject.build do
 			include MyEnvironment
