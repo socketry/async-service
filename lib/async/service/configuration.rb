@@ -13,6 +13,15 @@ module Async
 		#
 		# Environments are key-value maps with lazy value resolution. An environment can inherit from a parent environment, which can provide defaults
 		class Configuration
+			def self.build(root: Dir.pwd, &block)
+				configuration = self.new
+				
+				loader = Loader.new(configuration, root)
+				loader.instance_eval(&block)
+				
+				return configuration
+			end
+			
 			def self.load(paths = ARGV)
 				configuration = self.new
 				

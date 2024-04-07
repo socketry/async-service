@@ -6,6 +6,20 @@
 require 'async/service/configuration'
 
 describe Async::Service::Configuration do
+	with '.build' do
+		it "can create a new configuration" do
+			configuration = subject.build do
+				service 'test' do
+					name 'value'
+				end
+			end
+			
+			expect(configuration.environments).to have_attributes(
+				size: be == 1
+			)
+		end
+	end
+	
 	with '.for' do
 		it "can create a new configuration" do
 			environment = Async::Service::Environment.new
