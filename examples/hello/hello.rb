@@ -12,7 +12,7 @@ class SleepService < Async::Service::Generic
 				sleep 1
 			end
 		end
-	end	
+	end
 end
 
 service "sleep" do
