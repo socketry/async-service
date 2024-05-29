@@ -47,11 +47,14 @@ module Async
 				Environment.build(**initial, &block)
 			end
 			
-			# Define a host with the specified name.
-			# Adds `root` and `authority` keys.
+			# Define a service with the specified name.
+			# Adds `root` and `name` keys.
 			# @parameter name [String] The name of the environment, usually a hostname.
-			def service(name, &block)
-				@configuration.add(self.environment(name: name, root: @root, &block))
+			def service(name = nil, **options, &block)
+				options[:name] = name
+				options[:root] ||= @root
+				
+				@configuration.add(self.environment(**options, &block))
 			end
 		end
 	end
