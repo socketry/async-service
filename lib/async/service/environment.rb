@@ -67,6 +67,10 @@ module Async
 						@facet.define_method(name){argument}
 					end
 				end
+				
+				def respond_to_missing?(name, include_private = false)
+					true
+				end
 			end
 			
 			def self.build(...)
