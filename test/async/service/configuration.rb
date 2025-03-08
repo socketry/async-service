@@ -1,17 +1,17 @@
 # frozen_string_literal: true
 
 # Released under the MIT License.
-# Copyright, 2024, by Samuel Williams.
+# Copyright, 2024-2025, by Samuel Williams.
 
-require 'async/service/configuration'
+require "async/service/configuration"
 require "async/service/good_interface"
 
 describe Async::Service::Configuration do
-	with '.build' do
+	with ".build" do
 		it "can create a new configuration" do
 			configuration = subject.build do
-				service 'test' do
-					name 'value'
+				service "test" do
+					name "value"
 				end
 			end
 			
@@ -21,7 +21,7 @@ describe Async::Service::Configuration do
 		end
 	end
 	
-	with '.for' do
+	with ".for" do
 		it "can create a new configuration" do
 			environment = Async::Service::Environment.new
 			configuration = subject.for(environment)
@@ -31,7 +31,7 @@ describe Async::Service::Configuration do
 	end
 	
 	with "null serice configuration file" do
-		let(:configuration_path) {File.join(__dir__, '.configurations', 'null.rb')}
+		let(:configuration_path) {File.join(__dir__, ".configurations", "null.rb")}
 		
 		let(:configuration) do
 			subject.new.tap do |configuration|
@@ -39,19 +39,19 @@ describe Async::Service::Configuration do
 			end
 		end
 		
-		it 'can load configuration' do
+		it "can load configuration" do
 			expect(configuration).not.to be(:empty?)
 			
 			environment = configuration.environments.first
 			evaluator = environment.evaluator
-			expect(evaluator.name).to be == 'null'
+			expect(evaluator.name).to be == "null"
 			
 			expect(configuration.services.to_a).to be(:empty?)
 		end
 	end
 	
 	with "implementing service configuration file" do
-		let(:configuration_path) {File.join(__dir__, '.configurations', 'implementing.rb')}
+		let(:configuration_path) {File.join(__dir__, ".configurations", "implementing.rb")}
 		
 		let(:configuration) do
 			subject.new.tap do |configuration|
@@ -66,9 +66,9 @@ describe Async::Service::Configuration do
 		end
 	end
 	
-	with 'sleep service configuration file' do
-		let(:configuration_path) {File.join(__dir__, '.configurations', 'sleep.rb')}
-		let(:configuration_root) {File.join(File.realpath(__dir__), '.configurations')}
+	with "sleep service configuration file" do
+		let(:configuration_path) {File.join(__dir__, ".configurations", "sleep.rb")}
+		let(:configuration_root) {File.join(File.realpath(__dir__), ".configurations")}
 		
 		let(:configuration) do
 			subject.new.tap do |configuration|
@@ -76,25 +76,25 @@ describe Async::Service::Configuration do
 			end
 		end
 		
-		it 'can load configuration' do
+		it "can load configuration" do
 			expect(configuration).not.to be(:empty?)
 			
 			environment = configuration.environments.first
 			evaluator = environment.evaluator
-			expect(evaluator.name).to be == 'sleep'
+			expect(evaluator.name).to be == "sleep"
 			expect(evaluator.log_level).to be == :info
 			
 			expect(configuration.services.to_a).not.to be(:empty?)
 			service = configuration.services.first
 			
-			expect(service.name).to be == 'sleep'
+			expect(service.name).to be == "sleep"
 			expect(service.to_h).to have_keys(
-				name: be == 'sleep',
+				name: be == "sleep",
 				root: be == configuration_root,
 			)
 		end
 		
-		it 'evaluates the value multiple times' do
+		it "evaluates the value multiple times" do
 			environment = configuration.environments.first
 			evaluator = environment.evaluator
 			
@@ -102,7 +102,7 @@ describe Async::Service::Configuration do
 			expect(environment.evaluator.middleware).not.to be_equal(middleware)
 		end
 		
-		it 'can create a controller' do
+		it "can create a controller" do
 			controller = configuration.controller
 			expect(controller).to be_a(Async::Service::Controller)
 			
@@ -112,8 +112,8 @@ describe Async::Service::Configuration do
 		end
 	end
 	
-	with 'other configuration file' do
-		let(:configuration_path) {File.join(__dir__, '.configurations', 'other.rb')}
+	with "other configuration file" do
+		let(:configuration_path) {File.join(__dir__, ".configurations", "other.rb")}
 		
 		let(:configuration) do
 			subject.new.tap do |configuration|
@@ -121,12 +121,12 @@ describe Async::Service::Configuration do
 			end
 		end
 		
-		it 'can load a different configuration' do
+		it "can load a different configuration" do
 			expect(configuration).not.to be(:empty?)
 			
 			environment = configuration.environments.first
 			evaluator = environment.evaluator
-			expect(evaluator.name).to be == 'sleep'
+			expect(evaluator.name).to be == "sleep"
 		end
 	end
 end

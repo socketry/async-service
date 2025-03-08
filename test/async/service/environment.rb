@@ -1,13 +1,13 @@
 # frozen_string_literal: true
 
 # Released under the MIT License.
-# Copyright, 2024, by Samuel Williams.
+# Copyright, 2024-2025, by Samuel Williams.
 
-require 'async/service/environment'
+require "async/service/environment"
 
 module MyEnvironment
 	def my_key
-		'value'
+		"value"
 	end
 	
 	def my_method(x, y)
@@ -16,19 +16,19 @@ module MyEnvironment
 end
 
 describe Async::Service::Environment do
-	it 'must be provided a module' do
+	it "must be provided a module" do
 		expect{subject.new(Object)}.to raise_exception(ArgumentError)
 	end
 	
-	it 'can evaluate values' do
+	it "can evaluate values" do
 		environment = subject.build do
-			my_key 'value'
+			my_key "value"
 		end
 		
-		expect(environment.to_h).to have_keys(my_key: be == 'value')
+		expect(environment.to_h).to have_keys(my_key: be == "value")
 	end
 	
-	it 'can use other methods' do
+	it "can use other methods" do
 		environment = subject.build do |builder|
 			builder.dir __dir__
 		end
@@ -36,7 +36,7 @@ describe Async::Service::Environment do
 		expect(environment.to_h).to have_keys(dir: be == __dir__)
 	end
 	
-	it 'can evaluate methods' do
+	it "can evaluate methods" do
 		environment = subject.build do
 			include MyEnvironment
 			my_key {my_method(1, 2)}
@@ -45,53 +45,53 @@ describe Async::Service::Environment do
 		expect(environment.to_h).to have_keys(my_key: be == 3)
 	end
 	
-	it 'can evaluate nested values' do
+	it "can evaluate nested values" do
 		environment = subject.build do
-			other_key 'other value'
+			other_key "other value"
 			my_key {other_key}
 		end
 		
-		expect(environment.to_h).to have_keys(my_key: be == 'other value')
+		expect(environment.to_h).to have_keys(my_key: be == "other value")
 	end
 	
-	it 'can evaluate blocks' do
+	it "can evaluate blocks" do
 		environment = subject.build do
-			my_key {'value'}
+			my_key {"value"}
 		end
 		
-		expect(environment.to_h).to have_keys(my_key: be == 'value')
+		expect(environment.to_h).to have_keys(my_key: be == "value")
 	end
 	
-	it 'can evaluate blocks with previous value' do
-		environment = subject.build(my_key: 'value').with do
-			my_key {'other value;' + super()}
+	it "can evaluate blocks with previous value" do
+		environment = subject.build(my_key: "value").with do
+			my_key {"other value;" + super()}
 		end
 		
-		expect(environment.to_h).to have_keys(my_key: be == 'other value;value')
+		expect(environment.to_h).to have_keys(my_key: be == "other value;value")
 	end
 	
-	it 'can include other environments' do
+	it "can include other environments" do
 		my_service = subject.build do
-			my_key 'value'
+			my_key "value"
 		end
 		
 		environment = subject.build do
 			include my_service
 		end
 		
-		expect(environment.to_h).to have_keys(my_key: be == 'value')
+		expect(environment.to_h).to have_keys(my_key: be == "value")
 	end
 	
-	it 'can include other modules' do
+	it "can include other modules" do
 		environment = subject.build do
 			include MyEnvironment
 		end
 		
-		expect(environment.to_h).to have_keys(my_key: be == 'value')
+		expect(environment.to_h).to have_keys(my_key: be == "value")
 	end
 	
-	with '#evaluator' do
-		it 'can evaluate values' do
+	with "#evaluator" do
+		it "can evaluate values" do
 			environment = subject.build do
 				my_proc {Object.new}
 			end
@@ -104,17 +104,17 @@ describe Async::Service::Environment do
 			expect{evaluator.invalid_key}.to raise_exception(NoMethodError)
 		end
 		
-		it 'can generate JSON' do
+		it "can generate JSON" do
 			environment = subject.build do
-				my_key 'value'
+				my_key "value"
 			end
 			
 			expect(environment.evaluator.to_json).to be == '{"my_key":"value"}'
 		end
 	end
 	
-	with '#implements?' do
-		it 'can check if environment implements a module' do
+	with "#implements?" do
+		it "can check if environment implements a module" do
 			environment = subject.build do
 				include MyEnvironment
 			end
@@ -122,7 +122,7 @@ describe Async::Service::Environment do
 			expect(environment).to be(:implements?, MyEnvironment)
 		end
 		
-		it 'can check if environment implements a module' do
+		it "can check if environment implements a module" do
 			environment = subject.build do
 			end
 			

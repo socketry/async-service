@@ -1,12 +1,12 @@
 # frozen_string_literal: true
 
 # Released under the MIT License.
-# Copyright, 2024, by Samuel Williams.
+# Copyright, 2024-2025, by Samuel Williams.
 
 def initialize(context)
 	super
 	
-	require 'async/service/configuration'
+	require "async/service/configuration"
 	
 	@configuration = Async::Service::Configuration.new
 end

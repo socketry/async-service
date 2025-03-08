@@ -1,8 +1,12 @@
+# frozen_string_literal: true
 
-require 'async/service/generic'
-require 'async/service/environment'
-require 'console'
-require 'async/container'
+# Released under the MIT License.
+# Copyright, 2024-2025, by Samuel Williams.
+
+require "async/service/generic"
+require "async/service/environment"
+require "console"
+require "async/container"
 
 class MyService < Async::Service::Generic
 end
@@ -11,33 +15,33 @@ describe Async::Service::Generic do
 	let(:environment) {Async::Service::Environment.new}
 	let(:service) {Async::Service::Generic.new(environment)}
 	
-	it 'can start a generic service' do
+	it "can start a generic service" do
 		expect(Console).to receive(:debug).and_return(nil)
 		
 		service.start
 	end
 	
-	it 'can stop a generic service' do
+	it "can stop a generic service" do
 		expect(Console).to receive(:debug).and_return(nil)
 		
 		service.stop
 	end
 	
-	it 'can setup a generic service' do
+	it "can setup a generic service" do
 		expect(Console).to receive(:debug).and_return(nil)
 		
 		container = Async::Container.new
 		service.setup(container)
 	end
 	
-	with 'service class' do
+	with "service class" do
 		let(:environment) do
 			Async::Service::Environment.build do
 				service_class MyService
 			end
 		end
 		
-		it 'can wrap a service and construct the right class' do
+		it "can wrap a service and construct the right class" do
 			service = Async::Service::Generic.wrap(environment)
 			expect(service).to be_a(MyService)
 		end

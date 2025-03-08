@@ -1,4 +1,8 @@
 #!/usr/bin/env async-service
+# frozen_string_literal: true
+
+# Released under the MIT License.
+# Copyright, 2024-2025, by Samuel Williams.
 
 class SleepService < Async::Service::Generic
 	def setup(container)
