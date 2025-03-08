@@ -51,9 +51,11 @@ module Async
 				return to_enum(:services, implementing: implementing) unless block_given?
 				
 				@environments.each do |environment|
-					next if implementing and environment.implements?(implementing)
-					
-					yield Generic.wrap(environment)
+					if implementing.nil? or environment.implements?(implementing)
+						if service = Generic.wrap(environment)
+							yield service
+						end
+					end
 				end
 			end
 			

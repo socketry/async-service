@@ -4,6 +4,7 @@
 # Copyright, 2024, by Samuel Williams.
 
 require 'async/service/configuration'
+require "async/service/good_interface"
 
 describe Async::Service::Configuration do
 	with '.build' do
@@ -26,6 +27,42 @@ describe Async::Service::Configuration do
 			configuration = subject.for(environment)
 			
 			expect(configuration.environments).to be(:include?, environment)
+		end
+	end
+	
+	with "null serice configuration file" do
+		let(:configuration_path) {File.join(__dir__, '.configurations', 'null.rb')}
+		
+		let(:configuration) do
+			subject.new.tap do |configuration|
+				configuration.load_file(configuration_path)
+			end
+		end
+		
+		it 'can load configuration' do
+			expect(configuration).not.to be(:empty?)
+			
+			environment = configuration.environments.first
+			evaluator = environment.evaluator
+			expect(evaluator.name).to be == 'null'
+			
+			expect(configuration.services.to_a).to be(:empty?)
+		end
+	end
+	
+	with "implementing service configuration file" do
+		let(:configuration_path) {File.join(__dir__, '.configurations', 'implementing.rb')}
+		
+		let(:configuration) do
+			subject.new.tap do |configuration|
+				configuration.load_file(configuration_path)
+			end
+		end
+		
+		it "can select services by implementing module" do
+			expect(configuration).not.to be(:empty?)
+			
+			expect(configuration.services(implementing: Async::Service::GoodInterface).to_a).not.to be(:empty?)
 		end
 	end
 	

@@ -12,11 +12,14 @@ module Async
 		class Generic
 			# Convert the given environment into a service if possible.
 			# @parameter environment [Build::Environment] The environment to use to construct the service.
+			# @returns [Generic | Nil] The constructed service if the environment specifies a service class.
 			def self.wrap(environment)
 				evaluator = environment.evaluator
 				
-				if service_class = evaluator.service_class || self
-					return service_class.new(environment, evaluator)
+				if evaluator.key?(:service_class)
+					if service_class = evaluator.service_class
+						return service_class.new(environment, evaluator)
+					end
 				end
 			end
 			

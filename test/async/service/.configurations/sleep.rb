@@ -8,37 +8,7 @@ LogLevel = environment do
 	log_level :info
 end
 
-# A test service:
-class SleepService < Async::Service::Generic
-	def setup(container)
-		super
-		
-		container.run(count: 1, restart: true) do |instance|
-			# Use log level:
-			Console.logger.level = @environment.evaluator.log_level
-			
-			if container.statistics.failed?
-				Console.debug(self, "Child process restarted #{container.statistics.restarts} times.")
-			else
-				Console.debug(self, "Child process started.")
-			end
-
-			instance.ready!
-
-			while true
-				sleep 1
-
-				Console.debug(self, "Work")
-
-				if rand < 0.1
-					Console.debug(self, "Should exit...")
-					sleep 0.5
-					exit(1)
-				end
-			end
-		end
-	end	
-end
+require "async/service/sleep_service"
 
 service "sleep" do
 	include LogLevel
@@ -46,7 +16,7 @@ service "sleep" do
 	authority {self.name}
 	middleware {Object.new}
 	
-	service_class SleepService
+	service_class Async::Service::SleepService
 end
 
 # A 2nd service:
