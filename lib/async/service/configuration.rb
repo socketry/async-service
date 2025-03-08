@@ -47,6 +47,12 @@ module Async
 				@environments.empty?
 			end
 			
+			# Enumerate all services in the configuration.
+			#
+			# A service is an environment that has a `service_class` key.
+			#
+			# @parameter implementing [Module] If specified, only services implementing this module will be returned/yielded.
+			# @yields {|service| ...} Each service in the configuration.
 			def services(implementing: nil)
 				return to_enum(:services, implementing: implementing) unless block_given?
 				
@@ -59,6 +65,9 @@ module Async
 				end
 			end
 			
+			# Create a controller for the configured services.
+			#
+			# @returns [Controller] A controller that can be used to start/stop services.
 			def controller(**options)
 				Controller.new(self.services(**options).to_a)
 			end
