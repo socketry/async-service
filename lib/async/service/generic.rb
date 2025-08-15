@@ -11,7 +11,7 @@ module Async
 		# Designed to be invoked within an {Async::Controller::Container}.
 		class Generic
 			# Convert the given environment into a service if possible.
-			# @parameter environment [Build::Environment] The environment to use to construct the service.
+			# @parameter environment [Environment] The environment to use to construct the service.
 			# @returns [Generic | Nil] The constructed service if the environment specifies a service class.
 			def self.wrap(environment)
 				evaluator = environment.evaluator
@@ -24,11 +24,14 @@ module Async
 			end
 			
 			# Initialize the service from the given environment.
-			# @parameter environment [Build::Environment]
+			# @parameter environment [Environment]
 			def initialize(environment, evaluator = environment.evaluator)
 				@environment = environment
 				@evaluator = evaluator
 			end
+			
+			# @attribute [Environment] The environment which is used to configure the service.
+			attr :environment
 			
 			def to_h
 				@evaluator.to_h
