@@ -4,6 +4,10 @@ Provides a simple service interface for configuring and running services.
 
 [![Development Status](https://github.com/socketry/async-service/workflows/Test/badge.svg)](https://github.com/socketry/async-service/actions?workflow=Test)
 
+## Releases
+
+There are no documented releases.
+
 ## Contributing
 
 We welcome contributions to this project.

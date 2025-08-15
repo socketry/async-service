@@ -10,7 +10,7 @@ class SleepService < Async::Service::Generic
 		
 		container.run(count: 1, restart: true) do |instance|
 			instance.ready!
-
+			
 			while true
 				puts "Hello World!"
 				sleep 1
