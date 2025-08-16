@@ -75,7 +75,7 @@ module Async
 					else
 						"#{key.to_s.upcase}=#{format_count(value)}"
 					end
-				end.join(' ')
+				end.join(" ")
 			end
 			
 			module_function :format_statistics
