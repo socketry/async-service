@@ -33,6 +33,8 @@ module Async
 			# @attribute [Environment] The environment which is used to configure the service.
 			attr :environment
 			
+			# Convert the service evaluator to a hash.
+			# @returns [Hash] A hash representation of the evaluator.
 			def to_h
 				@evaluator.to_h
 			end

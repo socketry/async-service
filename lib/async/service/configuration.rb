@@ -13,6 +13,10 @@ module Async
 		#
 		# Environments are key-value maps with lazy value resolution. An environment can inherit from a parent environment, which can provide defaults
 		class Configuration
+			# Build a configuration using a block.
+			# @parameter root [String] The root directory for loading files.
+			# @yields {|loader| ...} A loader instance for configuration.
+			# @returns [Configuration] A new configuration instance.
 			def self.build(root: Dir.pwd, &block)
 				configuration = self.new
 				
@@ -22,6 +26,9 @@ module Async
 				return configuration
 			end
 			
+			# Load configuration from file paths.
+			# @parameter paths [Array(String)] File paths to load, defaults to `ARGV`.
+			# @returns [Configuration] A new configuration instance.
 			def self.load(paths = ARGV)
 				configuration = self.new
 				
@@ -32,6 +39,9 @@ module Async
 				return configuration
 			end
 			
+			# Create configuration from environments.
+			# @parameter environments [Array] Environment instances.
+			# @returns [Configuration] A new configuration instance.
 			def self.for(*environments)
 				self.new(environments)
 			end
@@ -43,6 +53,8 @@ module Async
 			
 			attr :environments
 			
+			# Check if the configuration is empty.
+			# @returns [Boolean] True if no environments are configured.
 			def empty?
 				@environments.empty?
 			end

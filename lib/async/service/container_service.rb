@@ -8,6 +8,9 @@ require_relative "formatting"
 
 module Async
 	module Service
+		# A service that runs in a container with built-in health checking and process title formatting.
+		#
+		# This is the recommended base class for most services.
 		class ContainerService < Async::Service::Generic
 			include Async::Service::Formatting
 			
@@ -15,6 +18,13 @@ module Async
 				"#{evaluator.name} #{server.to_s}"
 			end
 			
+			# Run the service logic.
+			#
+			# Override this method to implement your service. Return an object that represents the running service (e.g., a server, task, or worker pool) for health checking.
+			#
+			# @parameter instance [Object] The container instance.
+			# @parameter evaluator [Environment::Evaluator] The environment evaluator.
+			# @returns [Object] The service object (server, task, etc.)
 			def run(instance, evaluator)
 				Async do
 					sleep
@@ -37,12 +47,15 @@ module Async
 				Console.warn(self, "Service preload failed!", error)
 			end
 			
+			# Start the service, including preloading resources.
 			def start
 				preload!
 				
 				super
 			end
 			
+			# Set up the container with health checking and process title formatting.
+			# @parameter container [Async::Container] The container to configure.
 			def setup(container)
 				super
 				

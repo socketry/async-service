@@ -7,7 +7,13 @@ require "async/container/controller"
 
 module Async
 	module Service
+		# Controls multiple services and their lifecycle.
+		#
+		# The controller manages starting, stopping, and monitoring multiple services
+		# within containers. It extends Async::Container::Controller to provide
+		# service-specific functionality.
 		class Controller < Async::Container::Controller
+			# Warm up the Ruby process by preloading gems and running GC.
 			def self.warmup
 				begin
 					require "bundler"
@@ -24,6 +30,9 @@ module Async
 				end
 			end
 			
+			# Run a configuration of services.
+			# @parameter configuration [Configuration] The service configuration to run.
+			# @parameter options [Hash] Additional options for the controller.
 			def self.run(configuration, **options)
 				controller = Async::Service::Controller.new(configuration.services.to_a, **options)
 				
@@ -32,10 +41,17 @@ module Async
 				controller.run
 			end
 			
+			# Create a controller for the given services.
+			# @parameter services [Array(Generic)] The services to control.
+			# @parameter options [Hash] Additional options for the controller.
+			# @returns [Controller] A new controller instance.
 			def self.for(*services, **options)
 				self.new(services, **options)
 			end
 			
+			# Initialize a new controller with services.
+			# @parameter services [Array(Generic)] The services to manage.
+			# @parameter options [Hash] Options passed to the parent controller.
 			def initialize(services, **options)
 				super(**options)
 				
