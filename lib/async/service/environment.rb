@@ -159,7 +159,9 @@ module Async
 				end
 				
 				def [](key)
-					self.__send__(key)
+					if self.key?(key)
+						self.__send__(key)
+					end
 				end
 				
 				def key?(key)

@@ -1,0 +1,64 @@
+# frozen_string_literal: true
+
+# Released under the MIT License.
+# Copyright, 2025, by Samuel Williams.
+
+require_relative "generic"
+require_relative "formatting"
+
+module Async
+	module Service
+		class ContainerService < Async::Service::Generic
+			include Async::Service::Formatting
+			
+			private def format_title(evaluator, server)
+				"#{evaluator.name} #{server.to_s}"
+			end
+			
+			def run(instance, evaluator)
+				Async do
+					sleep
+				end
+			end
+			
+			# Preload any resources specified by the environment.
+			def preload!
+				if scripts = @evaluator.preload
+					root = @evaluator.root
+					scripts = Array(scripts)
+					
+					scripts.each do |path|
+						Console.info(self) {"Preloading #{path}..."}
+						full_path = File.expand_path(path, root)
+						require(full_path)
+					end
+				end
+			rescue => error
+				Console.warn(self, "Service preload failed!", error)
+			end
+			
+			def start
+				preload!
+				
+				super
+			end
+			
+			def setup(container)
+				super
+				
+				container_options = @evaluator.container_options
+				health_check_timeout = container_options[:health_check_timeout]
+				
+				container.run(**container_options) do |instance|
+					evaluator = self.environment.evaluator
+					
+					server = run(instance, evaluator)
+					
+					health_checker(instance) do
+						instance.name = format_title(evaluator, server)
+					end
+				end
+			end	
+		end
+	end
+end

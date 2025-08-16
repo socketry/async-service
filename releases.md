@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+  - Introduce `ContainerEnvironment` and `ContainerService` for implementing best-practice services.
+
 ## v0.13.0
 
   - Fix null services handling.

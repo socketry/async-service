@@ -32,6 +32,10 @@ module Async
 				controller.run
 			end
 			
+			def self.for(*services, **options)
+				self.new(services, **options)
+			end
+			
 			def initialize(services, **options)
 				super(**options)
 				

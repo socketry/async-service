@@ -19,7 +19,12 @@ def load(path)
 	@configuration.load_file(path)
 end
 
-# List the available services.
+# List the available environments (all named environments).
 def list
+	@configuration.environments.map(&:to_h)
+end
+
+# List the available services (those that define a service class).
+def services
 	@configuration.services.map(&:to_h)
 end
