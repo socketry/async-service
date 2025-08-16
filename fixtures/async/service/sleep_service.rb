@@ -13,7 +13,7 @@ module Async
 				
 				container.run(count: 1, restart: true) do |instance|
 					# Use log level:
-					Console.logger.level = @environment.evaluator.log_level
+					Console.level = @environment.evaluator.log_level
 					
 					if container.statistics.failed?
 						Console.debug(self, "Child process restarted #{container.statistics.restarts} times.")
