@@ -19,11 +19,17 @@ Please see the [project documentation](https://socketry.github.io/async-service/
 
   - [Getting Started](https://socketry.github.io/async-service/guides/getting-started/index) - This guide explains how to get started with `async-service` to create and run services in Ruby.
 
+  - [Service Architecture](https://socketry.github.io/async-service/guides/service-architecture/index) - This guide explains the key architectural components of `async-service` and how they work together to provide a clean separation of concerns.
+
+  - [Best Practices](https://socketry.github.io/async-service/guides/best-practices/index) - This guide outlines recommended patterns and practices for building robust, maintainable services with `async-service`.
+
 ## Releases
 
 Please see the [project releases](https://socketry.github.io/async-service/releases/index) for all releases.
 
-### Unreleased
+### v0.14.0
+
+  - Introduce `ContainerEnvironment` and `ContainerService` for implementing best-practice services.
 
 ### v0.13.0
 
