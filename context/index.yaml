@@ -10,3 +10,11 @@ files:
   title: Getting Started
   description: This guide explains how to get started with `async-service` to create
     and run services in Ruby.
+- path: service-architecture.md
+  title: Service Architecture
+  description: This guide explains the key architectural components of `async-service`
+    and how they work together to provide a clean separation of concerns.
+- path: best-practices.md
+  title: Best Practices
+  description: This guide outlines recommended patterns and practices for building
+    robust, maintainable services with `async-service`.
