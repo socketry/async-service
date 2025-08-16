@@ -13,7 +13,7 @@ This guide explains the key architectural components of `async-service` and how 
 
 ## Environment
 
-The {ruby Async::Service::Environment} represents a lazy-evaluated chain of key-value pairs. It handles:
+The {ruby Async::Service::Environment} represents a lazy-evaluated chain of key-value pairs. It handles configuration storage, lazy evaluation of computed values, and composition through module inclusion to create flexible, reusable service configurations.
 
 ### Configuration Storage
 
@@ -82,7 +82,7 @@ end
 
 ## Service
 
-The {ruby Async::Service::Generic} represents the service implementation layer. It handles:
+The {ruby Async::Service::Generic} represents the service implementation layer. It handles the actual business logic of your services, provides access to configuration through environment evaluators, and manages the service lifecycle including startup, execution, and shutdown phases.
 
 ### Business Logic
 
@@ -172,7 +172,7 @@ end
 
 ## Configuration
 
-The {ruby Async::Service::Configuration} represents the top-level orchestration layer. It handles:
+The {ruby Async::Service::Configuration} represents the top-level orchestration layer. It handles service definition and registration, provides service discovery and management capabilities, supports loading configurations from files, and enables introspection of defined services and their settings.
 
 ### Service Definitions
 

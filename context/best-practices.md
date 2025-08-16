@@ -4,7 +4,7 @@ This guide outlines recommended patterns and practices for building robust, main
 
 ## Application Structure
 
-If you are creating an application that runs services, you should define a top level `services.rb` file:
+If you are creating an application that runs services, you should define a top level `services.rb` file that includes all your service configurations. This file serves as the main entry point for your services. If you are specifically working with the Falcon web server, this file is typically called `falcon.rb` for historical reasons.
 
 ### Service Configuration
 
