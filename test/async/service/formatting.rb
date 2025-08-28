@@ -8,9 +8,13 @@ require "async/service/formatting"
 describe Async::Service::Formatting do
 	with "#format_count" do
 		it "formats small numbers without units" do
-			expect(subject.format_count(0)).to be == "0.0"
-			expect(subject.format_count(1)).to be == "1.0"
-			expect(subject.format_count(999)).to be == "999.0"
+			expect(subject.format_count(0)).to be == "0"
+			expect(subject.format_count(0.0)).to be == "0.0"
+			
+			expect(subject.format_count(1)).to be == "1"
+			expect(subject.format_count(1.0)).to be == "1.0"
+
+			expect(subject.format_count(999)).to be == "999"
 		end
 		
 		it "formats thousands with K unit" do

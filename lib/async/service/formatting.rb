@@ -18,7 +18,7 @@ module Async
 			# @parameter units [Array] The units to use for formatting (default: UNITS).
 			# @returns [String] A formatted string representing the count.
 			def format_count(value, units = UNITS)
-				value = value.to_f
+				value = value
 				index = 0
 				limit = units.size - 1
 				
@@ -27,7 +27,7 @@ module Async
 				value = value.abs
 				
 				while value >= 1000 and index < limit
-					value = value / 1000
+					value = value / 1000.0
 					index += 1
 				end
 				
