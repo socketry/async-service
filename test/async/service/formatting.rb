@@ -72,20 +72,19 @@ describe Async::Service::Formatting do
 				expect(subject.format_count(1000000, custom_units)).to be == "1000.0K"
 			end
 			
-			it "handles empty units array" do
-				expect(subject.format_count(1000, [])).to be == "1000.0"
-			end
-			
-			it "handles single nil unit" do
-				expect(subject.format_count(1000, [nil])).to be == "1000.0"
-			end
+		it "handles empty units array" do
+			expect(subject.format_count(1000, [])).to be == "1000"
 		end
+		
+		it "handles single nil unit" do
+			expect(subject.format_count(1000, [nil])).to be == "1000"
+		end		end
 	end
 	
 	with "#format_ratio" do
 		it "formats ratios with appropriate units" do
-			expect(subject.format_ratio(23, 3420)).to be == "23.0/3.42K"
-			expect(subject.format_ratio(2, 3420)).to be == "2.0/3.42K"
+			expect(subject.format_ratio(23, 3420)).to be == "23/3.42K"
+			expect(subject.format_ratio(2, 3420)).to be == "2/3.42K"
 		end
 		
 		it "handles large ratios" do
@@ -93,12 +92,12 @@ describe Async::Service::Formatting do
 		end
 		
 		it "handles small ratios" do
-			expect(subject.format_ratio(5, 100)).to be == "5.0/100.0"
+			expect(subject.format_ratio(5, 100)).to be == "5/100"
 		end
 		
 		it "handles zero values" do
-			expect(subject.format_ratio(0, 1000)).to be == "0.0/1.0K"
-			expect(subject.format_ratio(100, 0)).to be == "100.0/0.0"
+			expect(subject.format_ratio(0, 1000)).to be == "0/1.0K"
+			expect(subject.format_ratio(100, 0)).to be == "100/0"
 		end
 	end
 	
@@ -118,12 +117,12 @@ describe Async::Service::Formatting do
 	with "#format_statistics" do
 		it "formats single values" do
 			result = subject.format_statistics(connections: 23)
-			expect(result).to be == "CONNECTIONS=23.0"
+			expect(result).to be == "CONNECTIONS=23"
 		end
 		
 		it "formats ratios from arrays" do
 			result = subject.format_statistics(c: [23, 3420])
-			expect(result).to be == "C=23.0/3.42K"
+			expect(result).to be == "C=23/3.42K"
 		end
 		
 		it "formats multiple statistics" do
@@ -131,7 +130,7 @@ describe Async::Service::Formatting do
 				c: [23, 3420], 
 				r: [2, 3420]
 			)
-			expect(result).to be == "C=23.0/3.42K R=2.0/3.42K"
+			expect(result).to be == "C=23/3.42K R=2/3.42K"
 		end
 		
 		it "handles mixed statistic types" do
@@ -140,7 +139,7 @@ describe Async::Service::Formatting do
 				active: 5,
 				load: 0.273
 			)
-			expect(result).to be == "CONNECTIONS=23.0/3.42K ACTIVE=5.0 LOAD=0.27"
+			expect(result).to be == "CONNECTIONS=23/3.42K ACTIVE=5 LOAD=0.27"
 		end
 		
 		it "handles arrays with more than 2 elements" do
@@ -158,7 +157,7 @@ describe Async::Service::Formatting do
 				:symbol_key => 100,
 				"string_key" => 200
 			)
-			expect(result).to be == "SYMBOL_KEY=100.0 STRING_KEY=200.0"
+			expect(result).to be == "SYMBOL_KEY=100 STRING_KEY=200"
 		end
 	end
 	
@@ -175,7 +174,7 @@ describe Async::Service::Formatting do
 				r: [active_count, request_count]
 			)
 			
-			expect(statistics).to be == "C=23.0/3.42K R=2.0/3.42K"
+			expect(statistics).to be == "C=23/3.42K R=2/3.42K"
 		end
 		
 		it "formats process title information" do
@@ -192,7 +191,7 @@ describe Async::Service::Formatting do
 			)
 			
 			process_title = "#{service_name} (#{stats} L=#{formatted_load})"
-			expect(process_title).to be == "web-server (C=23.0/3.42K R=2.0/3.42K L=0.27)"
+			expect(process_title).to be == "web-server (C=23/3.42K R=2/3.42K L=0.27)"
 		end
 	end
 end
