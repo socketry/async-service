@@ -13,7 +13,7 @@ describe Async::Service::Formatting do
 			
 			expect(subject.format_count(1)).to be == "1"
 			expect(subject.format_count(1.0)).to be == "1.0"
-
+			
 			expect(subject.format_count(999)).to be == "999"
 		end
 		

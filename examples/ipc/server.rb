@@ -1,10 +1,13 @@
 #!/usr/bin/env async-service
 # frozen_string_literal: true
 
+# Released under the MIT License.
+# Copyright, 2025, by Samuel Williams.
+
 # This file demonstrates running just the server component
 # Run with: async-service examples/ipc/server.rb
 
-require 'socket'
+require "socket"
 
 # Shared environment for IPC configuration
 environment(:ipc) do
@@ -25,21 +28,21 @@ class IPCServer < Async::Service::Generic
 			# Create Unix domain socket server
 			server = UNIXServer.new(socket_path)
 			
-			Console.info(self) { "IPC Server listening on #{socket_path}" }
+			Console.info(self) {"IPC Server listening on #{socket_path}"}
 			instance.ready!
 			
 			begin
 				while true
 					# Accept incoming connections
 					client = server.accept
-					Console.info(self) { "Client connected from PID #{client.peereid[0]}" }
+					Console.info(self) {"Client connected from PID #{client.peereid[0]}"}
 					
 					# Send greeting with timestamp
 					timestamp = Time.now.strftime("%H:%M:%S")
 					client.write("Hello World at #{timestamp}\n")
 					client.close
 					
-					Console.info(self) { "Sent greeting and closed connection" }
+					Console.info(self) {"Sent greeting and closed connection"}
 				end
 			rescue => error
 				Console.error(self, error)

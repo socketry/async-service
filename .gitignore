@@ -1,6 +1,6 @@
 /agent.md
-/.bundle
 /.context
+/.bundle
 /pkg
 /gems.locked
 /.covered.db
