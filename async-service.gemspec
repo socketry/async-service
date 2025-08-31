@@ -28,4 +28,5 @@ Gem::Specification.new do |spec|
 	
 	spec.add_dependency "async"
 	spec.add_dependency "async-container", "~> 0.16"
+	spec.add_dependency "string-format", "~> 0.2"
 end

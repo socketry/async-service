@@ -117,7 +117,7 @@ describe Async::Service::Formatting do
 	with "#format_statistics" do
 		it "formats single values" do
 			result = subject.format_statistics(connections: 23)
-			expect(result).to be == "CONNECTIONS=23"
+			expect(result).to be == "C=23"
 		end
 		
 		it "formats ratios from arrays" do
@@ -139,12 +139,12 @@ describe Async::Service::Formatting do
 				active: 5,
 				load: 0.273
 			)
-			expect(result).to be == "CONNECTIONS=23/3.42K ACTIVE=5 LOAD=0.27"
+			expect(result).to be == "C=23/3.42K A=5 L=0.27"
 		end
 		
 		it "handles arrays with more than 2 elements" do
 			result = subject.format_statistics(multi: [1, 2, 3])
-			expect(result).to be == "MULTI=1/2/3"
+			expect(result).to be == "M=1/2/3"
 		end
 		
 		it "handles empty statistics" do
@@ -157,7 +157,7 @@ describe Async::Service::Formatting do
 				:symbol_key => 100,
 				"string_key" => 200
 			)
-			expect(result).to be == "SYMBOL_KEY=100 STRING_KEY=200"
+			expect(result).to be == "S=100 S=200"
 		end
 	end
 	

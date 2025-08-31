@@ -1,5 +1,9 @@
 # Releases
 
+## Unreleased
+
+  - Use `String::Format` gem for formatting.
+
 ## v0.14.0
 
   - Introduce `ContainerEnvironment` and `ContainerService` for implementing best-practice services.
