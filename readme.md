@@ -27,6 +27,10 @@ Please see the [project documentation](https://socketry.github.io/async-service/
 
 Please see the [project releases](https://socketry.github.io/async-service/releases/index) for all releases.
 
+### v0.14.4
+
+  - Use `String::Format` gem for formatting.
+
 ### v0.14.0
 
   - Introduce `ContainerEnvironment` and `ContainerService` for implementing best-practice services.
@@ -66,10 +70,6 @@ Please see the [project releases](https://socketry.github.io/async-service/relea
 ### v0.6.1
 
   - Fix requirement that facet must be a module.
-
-### v0.6.0
-
-  - Unify construction of environments for better consistency.
 
 ## Contributing
 

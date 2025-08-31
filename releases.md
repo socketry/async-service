@@ -1,6 +1,6 @@
 # Releases
 
-## Unreleased
+## v0.14.4
 
   - Use `String::Format` gem for formatting.
 
