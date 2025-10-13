@@ -21,7 +21,12 @@ module Async
 				configuration = self.new
 				
 				loader = Loader.new(configuration, root)
-				loader.instance_eval(&block)
+				
+				if block.arity == 0
+					loader.instance_eval(&block)
+				else
+					yield loader
+				end
 				
 				return configuration
 			end
