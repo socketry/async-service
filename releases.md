@@ -1,6 +1,6 @@
 # Releases
 
-## Unreleased
+## v0.15.1
 
   - `Managed::Service` should run within `Async do ... end`.
 

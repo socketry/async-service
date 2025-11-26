@@ -27,6 +27,10 @@ Please see the [project documentation](https://socketry.github.io/async-service/
 
 Please see the [project releases](https://socketry.github.io/async-service/releases/index) for all releases.
 
+### v0.15.1
+
+  - `Managed::Service` should run within `Async do ... end`.
+
 ### v0.15.0
 
   - Rename `ContainerEnvironment` and `ContainerService` to `Managed::Environment` and `Managed::Service` respectively.
@@ -67,10 +71,6 @@ Please see the [project releases](https://socketry.github.io/async-service/relea
 ### v0.8.0
 
   - Introduce `Environment#implements?` and related methods for interface checking.
-
-### v0.7.0
-
-  - Allow instance methods that take arguments in environments.
 
 ## Contributing
 
