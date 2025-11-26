@@ -30,6 +30,7 @@ Please see the [project releases](https://socketry.github.io/async-service/relea
 ### Unreleased
 
   - Rename `ContainerEnvironment` and `ContainerService` to `Managed::Environment` and `Managed::Service` respectively.
+  - Health check uses `Fiber.new{instance.ready!}.resume` to confirm fiber allocation is working.
 
 ### v0.14.4
 

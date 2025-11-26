@@ -262,6 +262,8 @@ end
 
 ### Health Checking
 
+For services using `Async::Service::Managed::Service`, health checking is handled automatically. For services extending `Generic`, you can set up health checking manually:
+
 ```ruby
 def setup(container)
 	container_options = @evaluator.container_options
@@ -270,7 +272,7 @@ def setup(container)
 	container.run(**container_options) do |instance|
 		# Prepare your service.
 		
-		Sync do
+		Async do
 			# Start your service.
 			
 			# Set up health checking, if a timeout was specified:
@@ -281,6 +283,8 @@ def setup(container)
 	end
 end
 ```
+
+Note: `Async::Service::Managed::Service` automatically handles health checking, container options, and process title formatting, so you typically don't need to set this up manually.
 
 ## How They Work Together
 
@@ -435,13 +439,11 @@ configuration = Async::Service::Configuration.load(["config/web.rb", "config/wor
 Create reusable configuration modules:
 
 ```ruby
-module ContainerEnvironment
+module ManagedEnvironment
+	include Async::Service::Managed::Environment
+	
 	def count
 		4
-	end
-	
-	def restart
-		true
 	end
 	
 	def health_check_timeout
@@ -451,7 +453,7 @@ end
 
 configuration = Async::Service::Configuration.build do
 	service "my-service" do
-		include ContainerEnvironment
+		include ManagedEnvironment
 		service_class MyService
 	end
 end

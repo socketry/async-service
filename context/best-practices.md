@@ -61,7 +61,7 @@ Place environments in `lib/my_library/environment/`:
 module MyLibrary
 	module Environment
 		module WebEnvironment
-			include Async::Service::ContainerEnvironment
+			include Async::Service::Managed::Environment
 			
 			def service_class
 				MyLibrary::Service::WebService
@@ -87,7 +87,7 @@ Place services in `lib/my_library/service/`:
 # lib/my_library/service/web_service.rb
 module MyLibrary
 	module Service
-		class WebService < Async::Service::ContainerService
+		class WebService < Async::Service::Managed::Service
 			private def format_title(evaluator, server)
 				if server&.respond_to?(:connection_count)
 					"#{self.name} [#{evaluator.host}:#{evaluator.port}] (#{server.connection_count} connections)"
@@ -98,7 +98,7 @@ module MyLibrary
 			
 			def run(instance, evaluator)
 				# Start your service and return the server object.
-				# ContainerService handles container setup, health checking, and process titles.
+				# Managed::Service handles container setup, health checking, and process titles.
 				start_web_server(evaluator.host, evaluator.port)
 			end
 			
@@ -112,13 +112,13 @@ module MyLibrary
 end
 ```
 
-### Use `ContainerEnvironment` for Services
+### Use `Managed::Environment` for Services
 
-Include {ruby Async::Service::ContainerEnvironment} for services that run in containers using {ruby Async::Service::ContainerService}:
+Include {ruby Async::Service::Managed::Environment} for services that need robust lifecycle management using {ruby Async::Service::Managed::Service}:
 
 ```ruby
 module WebEnvironment
-	include Async::Service::ContainerEnvironment
+	include Async::Service::Managed::Environment
 	
 	def service_class
 		WebService
@@ -199,16 +199,16 @@ end
 
 ## Service Best Practices
 
-### Use ContainerService as Base Class
+### Use `Managed::Service` as Base Class
 
-Prefer `Async::Service::ContainerService` over `Generic` for most services:
+Prefer `Async::Service::Managed::Service` over `Generic` for most services:
 
 ```ruby
-class WebService < Async::Service::ContainerService
-	# ContainerService automatically handles:
+class WebService < Async::Service::Managed::Service
+	# Managed::Service automatically handles:
 	# - Container setup with proper options.
 	# - Health checking with process title updates.
-	# - Integration with Formatting module.
+	# - Preloading of scripts before startup.
 	
 	private def format_title(evaluator, server)
 		# Customize process title display
@@ -247,7 +247,7 @@ Try to keep process titles short and focused.
 Utilize the `start` and `stop` hooks to manage shared resources effectively:
 
 ```ruby
-class WebService < Async::Service::ContainerService
+class WebService < Async::Service::Managed::Service
 	def start
 		# Bind to the endpoint in the container:
 		@endpoint = @evaluator.endpoint.bind
@@ -260,6 +260,8 @@ class WebService < Async::Service::ContainerService
 	end
 end
 ```
+
+These hooks are invoked **before** the container is setup (e.g. pre-forking).
 
 ## Testing Best Practices
 
