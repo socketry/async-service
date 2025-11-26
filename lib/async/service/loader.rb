@@ -38,6 +38,8 @@ module Async
 				loader.instance_eval(File.read(path), path)
 			end
 			
+			# Load a configuration file relative to the loader's root path.
+			# @parameter path [String] The path to the configuration file, relative to the loader's root.
 			def load_file(path)
 				Loader.load_file(@configuration, File.expand_path(path, @root))
 			end
