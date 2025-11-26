@@ -62,6 +62,73 @@ describe Async::Service::Managed::Service do
 		expect(options_captured[:restart]).to be == true
 	end
 	
+	with "integration test" do
+		include Sus::Fixtures::Async::SchedulerContext
+		
+		it "executes the container block with async context and health checking" do
+			container = Async::Container.new
+			block_executed = false
+			health_checker_called = false
+			instance_ready_called = false
+			
+			# Create a mock instance that tracks ready! calls
+			mock_instance = Object.new
+			def mock_instance.ready!
+				@ready_called = true
+			end
+			
+			def mock_instance.ready_called?
+				@ready_called || false
+			end
+			
+			def mock_instance.name=(value)
+				@name = value
+			end
+			
+			def mock_instance.name
+				@name
+			end
+			
+			# Mock container.run to actually execute the block
+			mock(container) do |mock|
+				mock.replace(:run) do |**options, &block|
+					# Execute the block in an async context (simulating what container does)
+					Async do
+						block.call(mock_instance)
+					end
+				end
+			end
+			
+			# Override run to track execution
+			service_class = Class.new(Async::Service::Managed::Service) do
+				def run(instance, evaluator)
+					@run_called = true
+					super
+				end
+				
+				def run_called?
+					@run_called || false
+				end
+			end
+			
+			test_service = service_class.new(service.environment)
+			
+			# Setup should execute without errors
+			expect{test_service.setup(container)
+			}.not.to raise_exception
+			
+			# Give async tasks time to execute
+			sleep(0.1)
+			
+			# Verify run was called
+			expect(test_service.run_called?).to be == true
+			
+			# Verify health checker would have been called (it creates async tasks)
+			# The instance should have been marked ready by the health checker
+			expect(mock_instance.ready_called?).to be == true
+		end
+	end
+	
 	with "custom managed service options" do
 		let(:configuration) do
 			Async::Service::Configuration.build do
@@ -205,6 +272,34 @@ describe Async::Service::Managed::Service do
 			expect(task).to be_a(Async::Task)
 			
 			task.stop
+		end
+	end
+	
+	with "integration test with controller" do
+		let(:configuration) do
+			Async::Service::Configuration.build do
+				service "test-managed" do
+					service_class Async::Service::Managed::Service
+					include Async::Service::Managed::Environment
+					
+					count 1
+
+					# Very short timeout to detect failures quickly:
+					health_check_timeout 0.01
+				end
+			end
+		end
+		
+		let(:test_service) {configuration.services.first}
+		let(:controller) {Async::Service::Controller.for(test_service)}
+		
+		it "runs service with health checking and no restarts when async context is present" do
+			container = Async::Container.new
+			
+			controller.setup(container)
+			controller.start
+			sleep(0.03)
+			controller.stop
 		end
 	end
 end

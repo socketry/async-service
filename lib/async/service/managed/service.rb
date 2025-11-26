@@ -49,7 +49,7 @@ module Async
 				rescue StandardError, LoadError => error
 					Console.warn(self, "Service preload failed!", error)
 				end
-				
+			
 				# Start the service, including preloading resources.
 				def start
 					preload!
@@ -66,17 +66,18 @@ module Async
 					health_check_timeout = container_options[:health_check_timeout]
 					
 					container.run(**container_options) do |instance|
-						evaluator = self.environment.evaluator
-						
-						server = run(instance, evaluator)
-						
-						health_checker(instance) do
-							instance.name = format_title(evaluator, server)
+						Async do
+							evaluator = self.environment.evaluator
+							
+							server = run(instance, evaluator)
+							
+							health_checker(instance) do
+								instance.name = format_title(evaluator, server)
+							end
 						end
 					end
-				end	
+				end
 			end
 		end
 	end
 end
-

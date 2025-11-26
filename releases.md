@@ -1,5 +1,9 @@
 # Releases
 
+## Unreleased
+
+  - `Managed::Service` should run within `Async do ... end`.
+
 ## v0.15.0
 
   - Rename `ContainerEnvironment` and `ContainerService` to `Managed::Environment` and `Managed::Service` respectively.
