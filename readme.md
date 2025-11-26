@@ -27,6 +27,10 @@ Please see the [project documentation](https://socketry.github.io/async-service/
 
 Please see the [project releases](https://socketry.github.io/async-service/releases/index) for all releases.
 
+### Unreleased
+
+  - Rename `ContainerEnvironment` and `ContainerService` to `Managed::Environment` and `Managed::Service` respectively.
+
 ### v0.14.4
 
   - Use `String::Format` gem for formatting.
@@ -66,10 +70,6 @@ Please see the [project releases](https://socketry.github.io/async-service/relea
 ### v0.7.0
 
   - Allow instance methods that take arguments in environments.
-
-### v0.6.1
-
-  - Fix requirement that facet must be a module.
 
 ## Contributing
 

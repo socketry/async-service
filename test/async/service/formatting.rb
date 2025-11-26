@@ -72,13 +72,14 @@ describe Async::Service::Formatting do
 				expect(subject.format_count(1000000, custom_units)).to be == "1000.0K"
 			end
 			
-		it "handles empty units array" do
-			expect(subject.format_count(1000, [])).to be == "1000"
+			it "handles empty units array" do
+				expect(subject.format_count(1000, [])).to be == "1000"
+			end
+			
+			it "handles single nil unit" do
+				expect(subject.format_count(1000, [nil])).to be == "1000"
+			end
 		end
-		
-		it "handles single nil unit" do
-			expect(subject.format_count(1000, [nil])).to be == "1000"
-		end		end
 	end
 	
 	with "#format_ratio" do

@@ -30,6 +30,24 @@ describe Async::Service::Configuration do
 		end
 	end
 	
+	with ".load" do
+		let(:configuration_path) {File.join(__dir__, ".configurations", "null.rb")}
+		
+		it "can load configuration from file paths" do
+			configuration = subject.load([configuration_path])
+			
+			expect(configuration).not.to be(:empty?)
+			expect(configuration.environments.first.evaluator.name).to be == "null"
+		end
+		
+		it "can load with empty array" do
+			configuration = subject.load([])
+			
+			expect(configuration).to be_a(Async::Service::Configuration)
+			expect(configuration).to be(:empty?)
+		end
+	end
+	
 	with "null serice configuration file" do
 		let(:configuration_path) {File.join(__dir__, ".configurations", "null.rb")}
 		

@@ -23,30 +23,30 @@ class IPCClient < Async::Service::Generic
 		container.run(count: 1, restart: true) do |instance|
 			socket_path = evaluator.ipc_socket_path
 			
-			Console.info(self) {"IPC Client starting - will connect to #{socket_path}"}
+			Console.info(self){"IPC Client starting - will connect to #{socket_path}"}
 			instance.ready!
 			
 			while true
 				begin
 					# Connect to server
 					client = UNIXSocket.new(socket_path)
-					Console.info(self) {"Connected to server"}
+					Console.info(self){"Connected to server"}
 					
 					# Read response
 					response = client.readline.chomp
 					puts "📨 Received: #{response}"
 					
 					client.close
-					Console.info(self) {"Connection closed"}
+					Console.info(self){"Connection closed"}
 					
 					# Wait before next connection
 					sleep(2)
 					
 				rescue Errno::ENOENT
-					Console.warn(self) {"Server socket not found at #{socket_path}, retrying..."}
+					Console.warn(self){"Server socket not found at #{socket_path}, retrying..."}
 					sleep(3)
 				rescue Errno::ECONNREFUSED
-					Console.warn(self) {"Connection refused, server may not be ready"}
+					Console.warn(self){"Connection refused, server may not be ready"}
 					sleep(3)
 				rescue => error
 					Console.error(self, error)

@@ -6,11 +6,11 @@
 
 require "socket"
 require "async"
-require "async/service/container_service"
-require "async/service/container_environment"
+require "async/service/managed/service"
+require "async/service/managed/environment"
 
 # Server service that listens on a Unix domain socket and responds with "Hello World"
-class IPCServer < Async::Service::ContainerService
+class IPCServer < Async::Service::Managed::Service
 	def run(instance, evaluator)
 		socket_path = evaluator.ipc_socket_path
 		
@@ -20,20 +20,20 @@ class IPCServer < Async::Service::ContainerService
 		# Create Unix domain socket server
 		server = UNIXServer.new(socket_path)
 		
-		Console.info(self) {"IPC Server listening on #{socket_path}"}
+		Console.info(self){"IPC Server listening on #{socket_path}"}
 		instance.ready!
 		
 		begin
 			while true
 				# Accept incoming connections
 				client = server.accept
-				Console.info(self) {"Client connected"}
+				Console.info(self){"Client connected"}
 				
 				# Send greeting
 				client.write("Hello World\n")
 				client.close
 				
-				Console.info(self) {"Sent greeting and closed connection"}
+				Console.info(self){"Sent greeting and closed connection"}
 			end
 		rescue => error
 			Console.error(self, error)
@@ -47,12 +47,12 @@ class IPCServer < Async::Service::ContainerService
 end
 
 # Client service that periodically connects to the server
-class IPCClient < Async::Service::ContainerService
+class IPCClient < Async::Service::Managed::Service
 	def run(instance, evaluator)
 		socket_path = evaluator.ipc_socket_path
 		timeout = evaluator.ipc_connection_timeout
 		
-		Console.info(self) {"IPC Client starting - will connect to #{socket_path}"}
+		Console.info(self){"IPC Client starting - will connect to #{socket_path}"}
 		instance.ready!
 		
 		Async do |task|
@@ -63,20 +63,20 @@ class IPCClient < Async::Service::ContainerService
 					
 					# Connect to server
 					client = UNIXSocket.new(socket_path)
-					Console.info(self) {"Connected to server"}
+					Console.info(self){"Connected to server"}
 					
 					# Read response
 					response = client.readline.chomp
 					puts "Received from server: #{response}"
 					
 					client.close
-					Console.info(self) {"Connection closed"}
+					Console.info(self){"Connection closed"}
 					
 					# Wait before next connection
 					task.sleep(3)
 					
 				rescue Errno::ENOENT
-					Console.warn(self) {"Server socket not found at #{socket_path}, retrying..."}
+					Console.warn(self){"Server socket not found at #{socket_path}, retrying..."}
 					task.sleep(2)
 				rescue => error
 					Console.error(self, error)
@@ -88,7 +88,7 @@ class IPCClient < Async::Service::ContainerService
 end
 
 module IPCEnvironment
-	include Async::Service::ContainerEnvironment
+	include Async::Service::Managed::Environment
 	
 	def ipc_socket_path
 		File.expand_path("service.ipc", Dir.pwd)

@@ -29,7 +29,7 @@ Create a simple service that runs continuously:
 ```ruby
 #!/usr/bin/env async-service
 
-require 'async/service'
+require "async/service"
 
 class HelloService < Async::Service::Generic
 	def setup(container)
@@ -99,7 +99,7 @@ You can define multiple services in a single configuration file:
 ```ruby
 #!/usr/bin/env async-service
 
-require 'async/service'
+require "async/service"
 
 class WebService < Async::Service::Generic
 	def setup(container)
@@ -141,7 +141,7 @@ end
 You can also create and run services programmatically:
 
 ```ruby
-require 'async/service'
+require "async/service"
 
 configuration = Async::Service::Configuration.build do
 	service "my-service" do

@@ -84,14 +84,6 @@ module Async
 						@facet.define_method(name){argument}
 					end
 				end
-				
-				# Always respond to missing methods for dynamic method definition.
-				# @parameter name [Symbol] The method name.
-				# @parameter include_private [Boolean] Whether to include private methods.
-				# @returns [Boolean] Always true to enable dynamic method definition.
-				def respond_to_missing?(name, include_private = false)
-					true
-				end
 			end
 			
 			# Build a new environment using the builder DSL.
@@ -170,7 +162,7 @@ module Async
 					end
 					
 					# This lists all zero-argument methods:
-					evaluator.define_method(:keys) {keys}
+					evaluator.define_method(:keys){keys}
 					
 					return evaluator.new
 				end

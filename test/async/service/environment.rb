@@ -111,6 +111,58 @@ describe Async::Service::Environment do
 			
 			expect(environment.evaluator.to_json).to be == '{"my_key":"value"}'
 		end
+		
+		it "can access values using hash-like syntax" do
+			environment = subject.build do
+				my_key "value"
+				other_key "other"
+			end
+			
+			evaluator = environment.evaluator
+			expect(evaluator[:my_key]).to be == "value"
+			expect(evaluator[:other_key]).to be == "other"
+			expect(evaluator[:nonexistent]).to be_nil
+		end
+	end
+	
+	with "Builder.for with Proc values" do
+		it "can handle Proc values passed as keyword arguments" do
+			environment = subject.build(my_key: ->{"proc_value"})
+			
+			expect(environment.to_h).to have_keys(my_key: be == "proc_value")
+		end
+	end
+	
+	with "Builder.for with facets" do
+		it "can include facets passed as arguments" do
+			environment = subject.build(MyEnvironment)
+			
+			expect(environment.to_h).to have_keys(my_key: be == "value")
+		end
+		
+		it "can include multiple facets" do
+			other_module = Module.new do
+				def other_key
+					"other_value"
+				end
+			end
+			
+			environment = subject.build(MyEnvironment, other_module)
+			
+			expect(environment.to_h).to have_keys(
+				my_key: be == "value",
+				other_key: be == "other_value"
+			)
+		end
+	end
+	
+	with "Builder.include error cases" do
+		it "raises ArgumentError when including non-module, non-includable object" do
+			builder = Async::Service::Environment::Builder.new
+			
+			expect{builder.include(Object.new)
+			}.to raise_exception(ArgumentError)
+		end
 	end
 	
 	with "#implements?" do

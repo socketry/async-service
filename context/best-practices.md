@@ -14,8 +14,8 @@ Create a single top-level `service.rb` file as your main entry point:
 #!/usr/bin/env async-service
 
 # Load your service configurations
-require_relative 'lib/my_library/environment/web_environment'
-require_relative 'lib/my_library/environment/worker_environment'
+require_relative "lib/my_library/environment/web_environment"
+require_relative "lib/my_library/environment/worker_environment"
 
 service "web" do
 	include MyLibrary::Environment::WebEnvironment
@@ -159,9 +159,9 @@ module WebEnvironment
 	def port
 		3000
 	end
-
+	
 	def host
-		'0.0.0.0'
+		"0.0.0.0"
 	end
 end
 
@@ -172,7 +172,7 @@ module WorkerEnvironment
 	end
 	
 	def queue_name
-		'default'
+		"default"
 	end
 	
 	def count
@@ -254,7 +254,7 @@ class WebService < Async::Service::ContainerService
 		
 		super
 	end
-
+	
 	def stop
 		@endpoint&.close
 	end
@@ -302,7 +302,7 @@ describe MyLibrary::Service::WebService do
 	before do
 		controller.start
 	end
-
+	
 	after do
 		controller.stop
 	end

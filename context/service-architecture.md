@@ -439,11 +439,11 @@ module ContainerEnvironment
 	def count
 		4
 	end
-
+	
 	def restart
 		true
 	end
-
+	
 	def health_check_timeout
 		30
 	end
