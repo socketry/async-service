@@ -4,3 +4,5 @@ service-architecture:
   order: 2
 best-practices:
   order: 3
+deployment:
+  order: 4

@@ -23,6 +23,8 @@ Please see the [project documentation](https://socketry.github.io/async-service/
 
   - [Best Practices](https://socketry.github.io/async-service/guides/best-practices/index) - This guide outlines recommended patterns and practices for building robust, maintainable services with `async-service`.
 
+  - [Deployment](https://socketry.github.io/async-service/guides/deployment/index) - This guide explains how to deploy `async-service` applications using systemd and Kubernetes. We'll use a simple example service to demonstrate deployment configurations.
+
 ## Releases
 
 Please see the [project releases](https://socketry.github.io/async-service/releases/index) for all releases.

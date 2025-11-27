@@ -18,3 +18,8 @@ files:
   title: Best Practices
   description: This guide outlines recommended patterns and practices for building
     robust, maintainable services with `async-service`.
+- path: deployment.md
+  title: Deployment
+  description: This guide explains how to deploy `async-service` applications using
+    systemd and Kubernetes. We'll use a simple example service to demonstrate deployment
+    configurations.

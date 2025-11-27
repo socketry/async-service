@@ -92,6 +92,8 @@ class WebServerService < Async::Service::Generic
 end
 ```
 
+The evaluator is a memoized instance of the service's configuration, allowing for efficient access to configuration values throughout the service's lifecycle. If a service worker is restarted, it will create a new evaluator and a fresh environment.
+
 ### Multiple Services
 
 You can define multiple services in a single configuration file:
@@ -151,40 +153,3 @@ end
 
 Async::Service::Controller.run(configuration)
 ```
-
-### Accessing Configuration Values
-
-Services have access to their configuration through the environment and evaluator:
-
-```ruby
-class ConfigurableService < Async::Service::Generic
-	def setup(container)
-		super
-		
-		container.run(count: 1, restart: true) do |instance|
-			# Clone the evaluator for thread safety
-			evaluator = self.environment.evaluator
-			database_url = evaluator.database_url
-			max_connections = evaluator.max_connections
-			debug_mode = evaluator.debug_mode
-			
-			puts "Database URL: #{database_url}"
-			puts "Max connections: #{max_connections}"
-			puts "Debug mode: #{debug_mode}"
-			
-			instance.ready!
-			
-			# Your service implementation using these values
-		end
-	end
-end
-
-service "configurable" do
-	service_class ConfigurableService
-	database_url "postgresql://localhost/myapp"
-	max_connections 10
-	debug_mode true
-end
-```
-
-The evaluator is a memoized instance of the service's configuration, allowing for efficient access to configuration values throughout the service's lifecycle.
