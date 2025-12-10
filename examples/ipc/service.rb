@@ -6,11 +6,11 @@
 
 require "socket"
 require "async"
-require "async/service/managed/service"
-require "async/service/managed/environment"
+require "async/service/managed_service"
+require "async/service/managed_environment"
 
 # Server service that listens on a Unix domain socket and responds with "Hello World"
-class IPCServer < Async::Service::Managed::Service
+class IPCServer < Async::Service::ManagedService
 	def run(instance, evaluator)
 		socket_path = evaluator.ipc_socket_path
 		
@@ -47,7 +47,7 @@ class IPCServer < Async::Service::Managed::Service
 end
 
 # Client service that periodically connects to the server
-class IPCClient < Async::Service::Managed::Service
+class IPCClient < Async::Service::ManagedService
 	def run(instance, evaluator)
 		socket_path = evaluator.ipc_socket_path
 		timeout = evaluator.ipc_connection_timeout
@@ -88,7 +88,7 @@ class IPCClient < Async::Service::Managed::Service
 end
 
 module IPCEnvironment
-	include Async::Service::Managed::Environment
+	include Async::Service::ManagedEnvironment
 	
 	def ipc_socket_path
 		File.expand_path("service.ipc", Dir.pwd)

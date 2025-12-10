@@ -4,19 +4,19 @@
 # Copyright, 2025, by Samuel Williams.
 
 require "async/service/configuration"
-require "async/service/managed/service"
-require "async/service/managed/environment"
+require "async/service/managed_service"
+require "async/service/managed_environment"
 require "async/container"
 require "async"
 
 require "sus/fixtures/async/scheduler_context"
 
-describe Async::Service::Managed::Service do
+describe Async::Service::ManagedService do
 	let(:configuration) do
 		Async::Service::Configuration.build do
 			service "test-container" do
-				service_class Async::Service::Managed::Service
-				include Async::Service::Managed::Environment
+				service_class Async::Service::ManagedService
+				include Async::Service::ManagedEnvironment
 				
 				count 2
 				health_check_timeout 5
@@ -27,7 +27,7 @@ describe Async::Service::Managed::Service do
 	let(:service) {configuration.services.first}
 	
 	it "can create a managed service with managed environment" do
-		expect(service).to be_a(Async::Service::Managed::Service)
+		expect(service).to be_a(Async::Service::ManagedService)
 		expect(service.name).to be == "test-container"
 	end
 	
@@ -100,7 +100,7 @@ describe Async::Service::Managed::Service do
 			end
 			
 			# Override run to track execution
-			service_class = Class.new(Async::Service::Managed::Service) do
+			service_class = Class.new(Async::Service::ManagedService) do
 				def run(instance, evaluator)
 					@run_called = true
 					super
@@ -133,8 +133,8 @@ describe Async::Service::Managed::Service do
 		let(:configuration) do
 			Async::Service::Configuration.build do
 				service "custom-container" do
-					service_class Async::Service::Managed::Service
-					include Async::Service::Managed::Environment
+					service_class Async::Service::ManagedService
+					include Async::Service::ManagedEnvironment
 					
 					count 4
 					health_check_timeout 60
@@ -155,8 +155,8 @@ describe Async::Service::Managed::Service do
 		let(:configuration) do
 			Async::Service::Configuration.build do
 				service "no-health-check" do
-					service_class Async::Service::Managed::Service
-					include Async::Service::Managed::Environment
+					service_class Async::Service::ManagedService
+					include Async::Service::ManagedEnvironment
 					
 					health_check_timeout nil
 				end
@@ -185,12 +185,12 @@ describe Async::Service::Managed::Service do
 		
 		let(:environment) do
 			Async::Service::Environment.build(root: root) do
-				include Async::Service::Managed::Environment
+				include Async::Service::ManagedEnvironment
 				preload ["script1.rb", "script2.rb"]
 			end
 		end
 		
-		let(:service) {Async::Service::Managed::Service.new(environment)}
+		let(:service) {Async::Service::ManagedService.new(environment)}
 		
 		it "calls require with expanded paths for each preload script" do
 			required = Thread::Queue.new
@@ -205,11 +205,11 @@ describe Async::Service::Managed::Service do
 		
 		it "handles single script as string" do
 			environment = Async::Service::Environment.build(root: root) do
-				include Async::Service::Managed::Environment
+				include Async::Service::ManagedEnvironment
 				preload "single.rb"
 			end
 			
-			service = Async::Service::Managed::Service.new(environment)
+			service = Async::Service::ManagedService.new(environment)
 			required = Thread::Queue.new
 			
 			expect(Console).to receive(:info).and_return(nil)
@@ -222,11 +222,11 @@ describe Async::Service::Managed::Service do
 		
 		it "handles empty preload array" do
 			environment = Async::Service::Environment.build(root: root) do
-				include Async::Service::Managed::Environment
+				include Async::Service::ManagedEnvironment
 				preload []
 			end
 			
-			service = Async::Service::Managed::Service.new(environment)
+			service = Async::Service::ManagedService.new(environment)
 			expect(service).not.to receive(:require)
 			
 			service.preload!
@@ -234,10 +234,10 @@ describe Async::Service::Managed::Service do
 		
 		it "handles nil preload" do
 			environment = Async::Service::Environment.build(root: root) do
-				include Async::Service::Managed::Environment
+				include Async::Service::ManagedEnvironment
 			end
 			
-			service = Async::Service::Managed::Service.new(environment)
+			service = Async::Service::ManagedService.new(environment)
 			expect(service).not.to receive(:require)
 			
 			service.preload!
@@ -245,11 +245,11 @@ describe Async::Service::Managed::Service do
 		
 		it "handles preload errors gracefully" do
 			environment = Async::Service::Environment.build(root: root) do
-				include Async::Service::Managed::Environment
+				include Async::Service::ManagedEnvironment
 				preload ["error.rb"]
 			end
 			
-			service = Async::Service::Managed::Service.new(environment)
+			service = Async::Service::ManagedService.new(environment)
 			error = LoadError.new("Cannot load such file")
 			
 			expect(Console).to receive(:info).and_return(nil)
@@ -279,8 +279,8 @@ describe Async::Service::Managed::Service do
 		let(:configuration) do
 			Async::Service::Configuration.build do
 				service "test-managed" do
-					service_class Async::Service::Managed::Service
-					include Async::Service::Managed::Environment
+					service_class Async::Service::ManagedService
+					include Async::Service::ManagedEnvironment
 					
 					count 1
 
@@ -296,10 +296,14 @@ describe Async::Service::Managed::Service do
 		it "runs service with health checking and no restarts when async context is present" do
 			container = Async::Container.new
 			
-			controller.setup(container)
-			controller.start
-			sleep(0.03)
-			controller.stop
+			begin
+				controller.setup(container)
+				controller.start
+				sleep(0.03)
+			ensure
+				controller.stop
+				container.stop
+			end
 		end
 	end
 end

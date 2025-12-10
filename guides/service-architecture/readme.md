@@ -82,14 +82,14 @@ end
 
 ## Service
 
-The {ruby Async::Service::Generic} represents the service implementation layer. It handles the actual business logic of your services, provides access to configuration through environment evaluators, and manages the service lifecycle including startup, execution, and shutdown phases.
+The {ruby Async::Service::GenericService} represents the service implementation layer. It handles the actual business logic of your services, provides access to configuration through environment evaluators, and manages the service lifecycle including startup, execution, and shutdown phases.
 
 ### Business Logic
 
 Services contain the actual implementation of what your service does:
 
 ```ruby
-class WebService < Async::Service::Generic
+class WebService < Async::Service::GenericService
 	def setup(container)
 		super
 		
@@ -148,7 +148,7 @@ By evaluating the log_path in the child process, you ensure that each instance h
 Services define their startup, running, and shutdown behavior:
 
 ```ruby
-class MyService < Async::Service::Generic
+class MyService < Async::Service::GenericService
 	def start
 		super
 		# Service-specific startup logic including pre-loading libraries and binding to network interfaces before forking.
@@ -262,7 +262,7 @@ end
 
 ### Health Checking
 
-For services using `Async::Service::Managed::Service`, health checking is handled automatically. For services extending `Generic`, you can set up health checking manually:
+For services using `Async::Service::ManagedService`, health checking is handled automatically. For services extending `GenericService`, you can set up health checking manually:
 
 ```ruby
 def setup(container)
@@ -284,7 +284,7 @@ def setup(container)
 end
 ```
 
-Note: `Async::Service::Managed::Service` automatically handles health checking, container options, and process title formatting, so you typically don't need to set this up manually.
+Note: `Async::Service::ManagedService` automatically handles health checking, container options, and process title formatting, so you typically don't need to set this up manually.
 
 ## How They Work Together
 
@@ -305,7 +305,7 @@ end
 
 ```ruby
 # Services are defined using environments:
-class WebService < Async::Service::Generic
+class WebService < Async::Service::GenericService
 	def setup(container)
 		super
 		
@@ -440,7 +440,7 @@ Create reusable configuration modules:
 
 ```ruby
 module ManagedEnvironment
-	include Async::Service::Managed::Environment
+	include Async::Service::ManagedEnvironment
 	
 	def count
 		4
@@ -464,7 +464,7 @@ end
 Build service hierarchies:
 
 ```ruby
-class BaseWebService < Async::Service::Generic
+class BaseWebService < Async::Service::GenericService
 	def setup(container)
 		super
 		# Common web service setup

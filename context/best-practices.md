@@ -61,7 +61,7 @@ Place environments in `lib/my_library/environment/`:
 module MyLibrary
 	module Environment
 		module WebEnvironment
-			include Async::Service::Managed::Environment
+			include Async::Service::ManagedEnvironment
 			
 			def service_class
 				MyLibrary::Service::WebService
@@ -87,7 +87,7 @@ Place services in `lib/my_library/service/`:
 # lib/my_library/service/web_service.rb
 module MyLibrary
 	module Service
-		class WebService < Async::Service::Managed::Service
+		class WebService < Async::Service::ManagedService
 			private def format_title(evaluator, server)
 				if server&.respond_to?(:connection_count)
 					"#{self.name} [#{evaluator.host}:#{evaluator.port}] (#{server.connection_count} connections)"
@@ -114,11 +114,11 @@ end
 
 ### Use `Managed::Environment` for Services
 
-Include {ruby Async::Service::Managed::Environment} for services that need robust lifecycle management using {ruby Async::Service::Managed::Service}:
+Include {ruby Async::Service::ManagedEnvironment} for services that need robust lifecycle management using {ruby Async::Service::ManagedService}:
 
 ```ruby
 module WebEnvironment
-	include Async::Service::Managed::Environment
+	include Async::Service::ManagedEnvironment
 	
 	def service_class
 		WebService
@@ -201,10 +201,10 @@ end
 
 ### Use `Managed::Service` as Base Class
 
-Prefer `Async::Service::Managed::Service` over `Generic` for most services:
+Prefer `Async::Service::ManagedService` over `GenericService` for most services:
 
 ```ruby
-class WebService < Async::Service::Managed::Service
+class WebService < Async::Service::ManagedService
 	# Managed::Service automatically handles:
 	# - Container setup with proper options.
 	# - Health checking with process title updates.
@@ -247,7 +247,7 @@ Try to keep process titles short and focused.
 Utilize the `start` and `stop` hooks to manage shared resources effectively:
 
 ```ruby
-class WebService < Async::Service::Managed::Service
+class WebService < Async::Service::ManagedService
 	def start
 		# Bind to the endpoint in the container:
 		@endpoint = @evaluator.endpoint.bind

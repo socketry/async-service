@@ -11,10 +11,10 @@ Let's start with a simple HTTP service that we'll deploy:
 # frozen_string_literal: true
 
 require "async/http"
-require "async/service/managed/service"
-require "async/service/managed/environment"
+require "async/service/managed_service"
+require "async/service/managed_environment"
 
-class WebService < Async::Service::Managed::Service
+class WebService < Async::Service::ManagedService
 	def start
 		super
 		@endpoint = @evaluator.endpoint
@@ -40,7 +40,7 @@ class WebService < Async::Service::Managed::Service
 end
 
 module WebEnvironment
-	include Async::Service::Managed::Environment
+	include Async::Service::ManagedEnvironment
 	
 	def endpoint
 		Async::HTTP::Endpoint.parse("http://0.0.0.0:3000")

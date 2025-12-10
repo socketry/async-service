@@ -3,8 +3,8 @@
 # Released under the MIT License.
 # Copyright, 2025, by Samuel Williams.
 
-require "async/service/managed/health_checker"
-require "async/service/managed/environment"
+require "async/service/health_checker"
+require "async/service/managed_environment"
 require "async/service/environment"
 require "async"
 
@@ -22,19 +22,19 @@ class FakeInstance
 	end
 end
 
-describe Async::Service::Managed::HealthChecker do
+describe Async::Service::HealthChecker do
 	include Sus::Fixtures::Async::SchedulerContext
 	
 	let(:environment) do
 		Async::Service::Environment.build do
-			include Async::Service::Managed::Environment
+			include Async::Service::ManagedEnvironment
 			health_check_timeout 10
 		end
 	end
 	
 	let(:service_class) do
 		Class.new do
-			include Async::Service::Managed::HealthChecker
+			include Async::Service::HealthChecker
 			
 			def initialize(environment)
 				@evaluator = environment.evaluator

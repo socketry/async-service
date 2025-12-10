@@ -27,7 +27,7 @@ Press `Ctrl+C` to stop the service.
 The example defines a simple service class:
 
 ~~~ ruby
-class SleepService < Async::Service::Generic
+class SleepService < Async::Service::GenericService
 	def setup(container)
 		super
 		
@@ -45,7 +45,7 @@ end
 
 Key points:
 
-- **Inherits from `Async::Service::Generic`**: Provides the basic service interface
+- **Inherits from `Async::Service::GenericService`**: Provides the basic service interface
 - **Implements `setup(container)`**: Defines how the service runs
 - **Uses `container.run`**: Creates one instance with automatic restart
 - **Calls `instance.ready!`**: Signals the service is ready

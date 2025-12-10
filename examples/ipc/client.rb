@@ -16,7 +16,7 @@ environment(:ipc) do
 	ipc_socket_path File.expand_path("service.ipc", Dir.pwd)
 end
 
-class IPCClient < Async::Service::Generic
+class IPCClient < Async::Service::GenericService
 	def setup(container)
 		super
 		

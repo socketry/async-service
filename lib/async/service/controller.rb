@@ -42,7 +42,7 @@ module Async
 			end
 			
 			# Create a controller for the given services.
-			# @parameter services [Array(Generic)] The services to control.
+			# @parameter services [Array(GenericService)] The services to control.
 			# @parameter options [Hash] Additional options for the controller.
 			# @returns [Controller] A new controller instance.
 			def self.for(*services, **options)
@@ -50,7 +50,7 @@ module Async
 			end
 			
 			# Initialize a new controller with services.
-			# @parameter services [Array(Generic)] The services to manage.
+			# @parameter services [Array(GenericService)] The services to manage.
 			# @parameter options [Hash] Options passed to the parent controller.
 			def initialize(services, **options)
 				super(**options)
@@ -59,7 +59,7 @@ module Async
 			end
 			
 			# All the services associated with this controller.
-			# @attribute [Array(Async::Service::Generic)] 
+			# @attribute [Array(Async::Service::GenericService)] 
 			attr :services
 			
 			# Start all named services.

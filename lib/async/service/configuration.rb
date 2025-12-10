@@ -4,7 +4,7 @@
 # Copyright, 2024-2025, by Samuel Williams.
 
 require_relative "loader"
-require_relative "generic"
+require_relative "generic_service"
 require_relative "controller"
 
 module Async
@@ -70,7 +70,7 @@ module Async
 				
 				@environments.each do |environment|
 					if implementing.nil? or environment.implements?(implementing)
-						if service = Generic.wrap(environment)
+						if service = GenericService.wrap(environment)
 							yield service
 						end
 					end

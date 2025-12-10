@@ -4,7 +4,7 @@
 # Released under the MIT License.
 # Copyright, 2024-2025, by Samuel Williams.
 
-class SleepService < Async::Service::Generic
+class SleepService < Async::Service::GenericService
 	def setup(container)
 		super
 		
