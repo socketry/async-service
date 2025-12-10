@@ -29,6 +29,12 @@ Please see the [project documentation](https://socketry.github.io/async-service/
 
 Please see the [project releases](https://socketry.github.io/async-service/releases/index) for all releases.
 
+### v0.16.0
+
+  - Renamed `Async::Service::Generic` -\> `Async::Service::GenericService`, added compatibilty alias.
+  - Renamed `Async::Service::Managed::Service` -\> `Async::Service::ManagedService`.
+  - Renamed `Async::Service::Managed::Environment` -\> `Async::Service::ManagedEnvironment`.
+
 ### v0.15.1
 
   - `Managed::Service` should run within `Async do ... end`.
@@ -69,10 +75,6 @@ Please see the [project releases](https://socketry.github.io/async-service/relea
 ### v0.9.0
 
   - Allow providing a list of modules to include in environments.
-
-### v0.8.0
-
-  - Introduce `Environment#implements?` and related methods for interface checking.
 
 ## Contributing
 

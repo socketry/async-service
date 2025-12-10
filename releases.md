@@ -1,10 +1,10 @@
 # Releases
 
-## Unreleased
+## v0.16.0
 
-  - Renamed `Async::Service::Generic` -> `Async::Service::GenericService`, added compatibilty alias.
-  - Renamed `Async::Service::Managed::Service` -> `Async::Service::ManagedService`.
-  - Renamed `Async::Service::Managed::Environment` -> `Async::Service::ManagedEnvironment`.
+  - Renamed `Async::Service::Generic` -\> `Async::Service::GenericService`, added compatibilty alias.
+  - Renamed `Async::Service::Managed::Service` -\> `Async::Service::ManagedService`.
+  - Renamed `Async::Service::Managed::Environment` -\> `Async::Service::ManagedEnvironment`.
 
 ## v0.15.1
 
