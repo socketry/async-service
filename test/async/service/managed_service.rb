@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 # Released under the MIT License.
-# Copyright, 2025, by Samuel Williams.
+# Copyright, 2025-2026, by Samuel Williams.
 
 require "async/service/configuration"
 require "async/service/managed_service"
@@ -199,7 +199,7 @@ describe Async::Service::ManagedService do
 		it "calls require with expanded paths for each preload script" do
 			required = Thread::Queue.new
 			expect(Console).to receive(:info).twice.and_return(nil)
-			expect(service).to receive(:require) {|path| required.push(path)}
+			expect(service).to receive(:require){|path| required.push(path)}
 			
 			service.preload!
 			
@@ -217,7 +217,7 @@ describe Async::Service::ManagedService do
 			required = Thread::Queue.new
 			
 			expect(Console).to receive(:info).and_return(nil)
-			expect(service).to receive(:require) {|path| required.push(path)}
+			expect(service).to receive(:require){|path| required.push(path)}
 			
 			service.preload!
 			
@@ -287,7 +287,7 @@ describe Async::Service::ManagedService do
 					include Async::Service::ManagedEnvironment
 					
 					count 1
-
+					
 					# Very short timeout to detect failures quickly:
 					health_check_timeout 0.01
 				end

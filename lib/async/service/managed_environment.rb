@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 # Released under the MIT License.
-# Copyright, 2025, by Samuel Williams.
+# Copyright, 2025-2026, by Samuel Williams.
 
 module Async
 	module Service
@@ -22,7 +22,7 @@ module Async
 			def startup_timeout
 				nil
 			end
-
+			
 			# The timeout duration for the health check. Set to `nil` to disable the health check.
 			#
 			# @returns [Numeric | nil] The health check timeout in seconds.

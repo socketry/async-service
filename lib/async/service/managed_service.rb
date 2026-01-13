@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 # Released under the MIT License.
-# Copyright, 2025, by Samuel Williams.
+# Copyright, 2025-2026, by Samuel Williams.
 
 require_relative "generic_service"
 require_relative "health_checker"
@@ -46,17 +46,17 @@ module Async
 			rescue StandardError, LoadError => error
 				Console.warn(self, "Service preload failed!", error)
 			end
-		
+			
 			# Start the service, including preloading resources.
 			def start
 				preload!
 				
 				super
 			end
-
+			
 			def emit_prepared(instance, start_time)
 			end
-
+			
 			def emit_running(instance, start_time)
 			end
 			
@@ -70,14 +70,14 @@ module Async
 				
 				container.run(**container_options) do |instance|
 					start_time = Async::Clock.start
-
+					
 					Async do
 						evaluator = self.environment.evaluator
 						
 						instance.status!("Preparing...")
 						evaluator.prepare!(instance)
 						emit_prepared(instance, start_time)
-
+						
 						instance.status!("Running...")
 						server = run(instance, evaluator)
 						emit_running(instance, start_time)
