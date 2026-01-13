@@ -262,7 +262,9 @@ end
 
 ### Health Checking
 
-For services using `Async::Service::ManagedService`, health checking is handled automatically. For services extending `GenericService`, you can set up health checking manually:
+For services using `Async::Service::ManagedService`, health checking is handled automatically. The service sends `status!` messages during startup to prevent premature health check timeouts, then transitions to sending `ready!` messages once the service is actually ready.
+
+For services extending `GenericService`, you can set up health checking manually:
 
 ```ruby
 def setup(container)
@@ -270,16 +272,43 @@ def setup(container)
 	health_check_timeout = container_options[:health_check_timeout]
 	
 	container.run(**container_options) do |instance|
+		# Send status updates during startup:
+		instance.status!("Preparing...")
 		# Prepare your service.
 		
 		Async do
 			# Start your service.
+			instance.status!("Starting...")
 			
-			# Set up health checking, if a timeout was specified:
+			# Once ready, set up health checking:
 			health_checker(instance, health_check_timeout) do
 				instance.name = "#{self.name}: #{current_status}"
 			end
 		end
+	end
+end
+```
+
+#### Startup Timeout vs Health Check Timeout
+
+The container supports two separate timeout mechanisms:
+
+- **`startup_timeout`**: Maximum time a process can take to become ready (call `ready!`) before being terminated. This detects processes that hang during startup and never become ready.
+- **`health_check_timeout`**: Maximum time between health check messages after the process has become ready. This detects processes that stop responding after they've started.
+
+Both timeouts use a single clock that starts when the process starts. The clock resets when the process becomes ready, transitioning from startup timeout monitoring to health check timeout monitoring.
+
+You can configure these timeouts via `container_options`:
+
+```ruby
+module WebEnvironment
+	include Async::Service::ManagedEnvironment
+	
+	def container_options
+		super.merge(
+			startup_timeout: 60,      # Allow up to 60 seconds for startup.
+			health_check_timeout: 30  # Require health checks every 30 seconds after ready.
+		)
 	end
 end
 ```

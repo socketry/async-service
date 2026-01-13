@@ -1,9 +1,9 @@
 # Releases
 
-## Unreleased
+## v0.17.0
 
-- `ManagedService` now sends `status!` messages during startup to prevent premature health check timeouts for slow-starting services.
-- Support for `startup_timeout` option via `container_options` to detect processes that hang during startup and never become ready.
+  - `ManagedService` now sends `status!` messages during startup to prevent premature health check timeouts for slow-starting services.
+  - Support for `startup_timeout` option via `container_options` to detect processes that hang during startup and never become ready.
 
 ## v0.16.0
 

@@ -29,6 +29,11 @@ Please see the [project documentation](https://socketry.github.io/async-service/
 
 Please see the [project releases](https://socketry.github.io/async-service/releases/index) for all releases.
 
+### v0.17.0
+
+  - `ManagedService` now sends `status!` messages during startup to prevent premature health check timeouts for slow-starting services.
+  - Support for `startup_timeout` option via `container_options` to detect processes that hang during startup and never become ready.
+
 ### v0.16.0
 
   - Renamed `Async::Service::Generic` -\> `Async::Service::GenericService`, added compatibilty alias.
@@ -71,10 +76,6 @@ Please see the [project releases](https://socketry.github.io/async-service/relea
 
   - Add `Environment::Evaluator#as_json` for JSON serialization support.
   - Allow constructing a configuration with existing environments.
-
-### v0.9.0
-
-  - Allow providing a list of modules to include in environments.
 
 ## Contributing
 
