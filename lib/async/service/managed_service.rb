@@ -54,10 +54,24 @@ module Async
 				super
 			end
 			
+			# Called after the service has been prepared but before it starts running.
+			#
+			# Override this method to emit metrics, logs, or perform other actions when the service preparation is complete.
+			#
+			# @parameter instance [Async::Container::Instance] The container instance.
+			# @parameter start_time [Async::Clock] The monotonic start time from {Async::Clock.start}.
 			def emit_prepared(instance, start_time)
+				# Override in subclasses as needed.
 			end
 			
+			# Called after the service has started running.
+			#
+			# Override this method to emit metrics, logs, or perform other actions when the service begins running.
+			#
+			# @parameter instance [Async::Container::Instance] The container instance.
+			# @parameter start_time [Async::Clock] The monotonic start time from {Async::Clock.start}.
 			def emit_running(instance, start_time)
+				# Override in subclasses as needed.
 			end
 			
 			# Set up the container with health checking and process title formatting.
