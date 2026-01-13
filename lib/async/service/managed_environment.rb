@@ -16,6 +16,13 @@ module Async
 				nil
 			end
 			
+			# The timeout duration for the startup. Set to `nil` to disable the startup timeout.
+			#
+			# @returns [Numeric | nil] The startup timeout in seconds.
+			def startup_timeout
+				nil
+			end
+
 			# The timeout duration for the health check. Set to `nil` to disable the health check.
 			#
 			# @returns [Numeric | nil] The health check timeout in seconds.
@@ -30,6 +37,7 @@ module Async
 				{
 					restart: true,
 					count: self.count,
+					startup_timeout: self.startup_timeout,
 					health_check_timeout: self.health_check_timeout,
 				}.compact
 			end

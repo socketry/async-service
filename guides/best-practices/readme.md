@@ -208,6 +208,7 @@ class WebService < Async::Service::ManagedService
 	# Managed::Service automatically handles:
 	# - Container setup with proper options.
 	# - Health checking with process title updates.
+	# - Status messages during startup to prevent premature timeouts.
 	# - Preloading of scripts before startup.
 	
 	private def format_title(evaluator, server)
@@ -221,6 +222,28 @@ class WebService < Async::Service::ManagedService
 	end
 end
 ```
+
+### Configure Timeouts for Slow-Starting Services
+
+If your service takes a long time to start up (e.g., loading large datasets, connecting to external services), configure appropriate timeouts:
+
+```ruby
+module WebEnvironment
+	include Async::Service::ManagedEnvironment
+	
+	# Allow 2 minutes for startup.
+	def startup_timeout
+		120
+	end
+	
+	# Require health checks every 30 seconds.
+	def health_check_timeout
+		30
+	end
+end
+```
+
+The `startup_timeout` ensures processes that hang during startup are detected, while `health_check_timeout` monitors processes after they've become ready. `ManagedService` automatically sends `status!` messages during startup to keep the health check clock resetting until the service is ready.
 
 ### Implement Meaningful Process Titles
 

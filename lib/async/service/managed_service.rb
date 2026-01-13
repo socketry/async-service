@@ -74,12 +74,12 @@ module Async
 					Async do
 						evaluator = self.environment.evaluator
 						
+						instance.status!("Preparing...")
 						evaluator.prepare!(instance)
-						
 						emit_prepared(instance, start_time)
 
+						instance.status!("Running...")
 						server = run(instance, evaluator)
-						
 						emit_running(instance, start_time)
 						
 						health_checker(instance) do

@@ -77,6 +77,10 @@ describe Async::Service::ManagedService do
 				@ready_called = true
 			end
 			
+			def mock_instance.status!(text)
+				# status! is called during startup but doesn't need to be tracked
+			end
+			
 			def mock_instance.ready_called?
 				@ready_called || false
 			end
