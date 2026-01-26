@@ -28,10 +28,10 @@ module Async
 							# We deliberately create a fiber here, to confirm that fiber creation is working.
 							# If something has gone wrong with fiber allocation, we will crash here, and that's okay.
 							Fiber.new do
-								instance.ready!
+								instance.healthy!
 							end.resume
 							
-							sleep(timeout / 2)
+							sleep(timeout / 2.0)
 						end
 					end
 				else
@@ -39,7 +39,7 @@ module Async
 						yield(instance)
 					end
 					
-					instance.ready!
+					instance.healthy!
 				end
 			end
 		end

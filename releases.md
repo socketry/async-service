@@ -1,5 +1,10 @@
 # Releases
 
+## Unreleased
+
+  - Start health checker earlier in the process. Use `#healthy!` message instead of `#ready!`.
+  - Emit prepared and running log messages with durations (e.g. how long it took to transition to prepared and running states).
+
 ## v0.17.0
 
   - `ManagedService` now sends `status!` messages during startup to prevent premature health check timeouts for slow-starting services.

@@ -12,13 +12,17 @@ require "sus/fixtures/async/scheduler_context"
 
 class FakeInstance
 	def initialize
-		@ready = Thread::Queue.new
+		@updates = Thread::Queue.new
 	end
 	
-	attr :ready
+	attr :updates
 	
 	def ready!
-		@ready.push(Time.now)
+		@updates.push([:ready!, Time.now])
+	end
+	
+	def healthy!
+		@updates.push([:healthy!, Time.now])
 	end
 end
 
@@ -48,7 +52,7 @@ describe Async::Service::HealthChecker do
 	let(:instance) {FakeInstance.new}
 	
 	with "#health_checker with timeout" do
-		it "creates an async task that calls ready! periodically" do
+		it "creates an async task that calls healthy! periodically" do
 			health_checker_task = service.health_checker(instance, 0.1)
 			
 			# Wait a bit to let the health checker run
@@ -56,8 +60,10 @@ describe Async::Service::HealthChecker do
 			
 			health_checker_task.stop
 			
-			# Should have called ready! at least once
-			expect(instance.ready.pop).to be_a(Time)
+			# Should have called healthy! at least once
+			update = instance.updates.pop
+			expect(update[0]).to be == :healthy!
+			expect(update[1]).to be_a(Time)
 		end
 		
 		it "yields the instance if a block is given" do
@@ -86,18 +92,20 @@ describe Async::Service::HealthChecker do
 			
 			health_checker_task.stop
 			
-			# Collect all ready! calls
-			ready_times = []
-			while instance.ready.size > 0
-				ready_times << instance.ready.pop
+			# Collect all healthy! calls
+			healthy_times = []
+			while instance.updates.size > 0
+				update = instance.updates.pop
+				expect(update[0]).to be == :healthy!
+				healthy_times << update[1]
 			end
 			
-			# Should have called ready! multiple times
-			expect(ready_times.size).to be >= 2
+			# Should have called healthy! multiple times
+			expect(healthy_times.size).to be >= 2
 			
 			# Check that calls are approximately spaced by timeout/2
-			if ready_times.size >= 2
-				intervals = ready_times.each_cons(2).map{|a, b| b - a}
+			if healthy_times.size >= 2
+				intervals = healthy_times.each_cons(2).map{|a, b| b - a}
 				# Each interval should be approximately timeout/2 (0.1 seconds)
 				intervals.each do |interval|
 					expect(interval).to be >= 0.08
@@ -108,11 +116,13 @@ describe Async::Service::HealthChecker do
 	end
 	
 	with "#health_checker without timeout" do
-		it "calls ready! immediately" do
+		it "calls healthy! immediately" do
 			service.health_checker(instance, nil)
 			
 			# Should be called immediately, no need to wait
-			expect(instance.ready.pop).to be_a(Time)
+			update = instance.updates.pop
+			expect(update[0]).to be == :healthy!
+			expect(update[1]).to be_a(Time)
 		end
 		
 		it "yields the instance if a block is given" do
@@ -126,8 +136,10 @@ describe Async::Service::HealthChecker do
 			
 			expect(block_called).to be == true
 			expect(instance_passed).to be == instance
-			# ready! should still be called
-			expect(instance.ready.pop).to be_a(Time)
+			# healthy! should still be called
+			update = instance.updates.pop
+			expect(update[0]).to be == :healthy!
+			expect(update[1]).to be_a(Time)
 		end
 		
 		it "does not create an async task" do
@@ -144,8 +156,10 @@ describe Async::Service::HealthChecker do
 			service.health_checker(instance, nil, parent: parent_task)
 			
 			expect(async_called).to be == false
-			# ready! should still be called
-			expect(instance.ready.pop).to be_a(Time)
+			# healthy! should still be called
+			update = instance.updates.pop
+			expect(update[0]).to be == :healthy!
+			expect(update[1]).to be_a(Time)
 		end
 	end
 	
@@ -160,8 +174,10 @@ describe Async::Service::HealthChecker do
 			
 			health_checker_task.stop
 			
-			# Should have called ready! at least once
-			expect(instance.ready.pop).to be_a(Time)
+			# Should have called healthy! at least once
+			update = instance.updates.pop
+			expect(update[0]).to be == :healthy!
+			expect(update[1]).to be_a(Time)
 		end
 	end
 end

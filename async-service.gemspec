@@ -27,6 +27,6 @@ Gem::Specification.new do |spec|
 	spec.required_ruby_version = ">= 3.2"
 	
 	spec.add_dependency "async"
-	spec.add_dependency "async-container", "~> 0.28"
+	spec.add_dependency "async-container", "~> 0.29"
 	spec.add_dependency "string-format", "~> 0.2"
 end

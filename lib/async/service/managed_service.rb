@@ -59,9 +59,10 @@ module Async
 			# Override this method to emit metrics, logs, or perform other actions when the service preparation is complete.
 			#
 			# @parameter instance [Async::Container::Instance] The container instance.
-			# @parameter start_time [Async::Clock] The monotonic start time from {Async::Clock.start}.
-			def emit_prepared(instance, start_time)
+			# @parameter clock [Async::Clock] The monotonic start time from {Async::Clock.start}.
+			def emit_prepared(instance, clock)
 				# Override in subclasses as needed.
+				Console.info(self, "Prepared...", duration: clock.total)
 			end
 			
 			# Called after the service has started running.
@@ -69,9 +70,10 @@ module Async
 			# Override this method to emit metrics, logs, or perform other actions when the service begins running.
 			#
 			# @parameter instance [Async::Container::Instance] The container instance.
-			# @parameter start_time [Async::Clock] The monotonic start time from {Async::Clock.start}.
-			def emit_running(instance, start_time)
+			# @parameter clock [Async::Clock] The monotonic start time from {Async::Clock.start}.
+			def emit_running(instance, clock)
 				# Override in subclasses as needed.
+				Console.info(self, "Running...", duration: clock.total)
 			end
 			
 			# Set up the container with health checking and process title formatting.
@@ -83,22 +85,27 @@ module Async
 				health_check_timeout = container_options[:health_check_timeout]
 				
 				container.run(**container_options) do |instance|
-					start_time = Async::Clock.start
+					clock = Async::Clock.start
 					
 					Async do
 						evaluator = self.environment.evaluator
+						server = nil
+						
+						health_checker(instance, health_check_timeout) do
+							if server
+								instance.name = format_title(evaluator, server)
+							end
+						end
 						
 						instance.status!("Preparing...")
 						evaluator.prepare!(instance)
-						emit_prepared(instance, start_time)
+						emit_prepared(instance, clock)
 						
 						instance.status!("Running...")
 						server = run(instance, evaluator)
-						emit_running(instance, start_time)
+						emit_running(instance, clock)
 						
-						health_checker(instance) do
-							instance.name = format_title(evaluator, server)
-						end
+						instance.ready!
 					end
 				end
 			end
