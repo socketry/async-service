@@ -29,6 +29,10 @@ Please see the [project documentation](https://socketry.github.io/async-service/
 
 Please see the [project releases](https://socketry.github.io/async-service/releases/index) for all releases.
 
+### v0.18.1
+
+  - Remove prepared and running log messages - not as useful as I imagined, and quite noisy.
+
 ### v0.18.0
 
   - Start health checker earlier in the process. Use `#healthy!` message instead of `#ready!`.
@@ -73,10 +77,6 @@ Please see the [project releases](https://socketry.github.io/async-service/relea
 ### v0.12.0
 
   - Add convenient `Configuration.build{...}` method for constructing inline configurations.
-
-### v0.11.0
-
-  - Allow builder with argument for more flexible configuration construction.
 
 ## Contributing
 

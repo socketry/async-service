@@ -1,6 +1,6 @@
 # Releases
 
-## Unreleased
+## v0.18.1
 
   - Remove prepared and running log messages - not as useful as I imagined, and quite noisy.
 
