@@ -62,7 +62,7 @@ module Async
 			# @parameter clock [Async::Clock] The monotonic start time from {Async::Clock.start}.
 			def emit_prepared(instance, clock)
 				# Override in subclasses as needed.
-				Console.info(self, "Prepared...", duration: clock.total)
+				# Console.info(self, "Prepared...", duration: clock.total)
 			end
 			
 			# Called after the service has started running.
@@ -73,7 +73,7 @@ module Async
 			# @parameter clock [Async::Clock] The monotonic start time from {Async::Clock.start}.
 			def emit_running(instance, clock)
 				# Override in subclasses as needed.
-				Console.info(self, "Running...", duration: clock.total)
+				# Console.info(self, "Running...", duration: clock.total)
 			end
 			
 			# Set up the container with health checking and process title formatting.

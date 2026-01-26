@@ -1,5 +1,9 @@
 # Releases
 
+## Unreleased
+
+  - Remove prepared and running log messages - not as useful as I imagined, and quite noisy.
+
 ## v0.18.0
 
   - Start health checker earlier in the process. Use `#healthy!` message instead of `#ready!`.
