@@ -1,6 +1,6 @@
 # Releases
 
-## Unreleased
+## v0.18.0
 
   - Start health checker earlier in the process. Use `#healthy!` message instead of `#ready!`.
   - Emit prepared and running log messages with durations (e.g. how long it took to transition to prepared and running states).

@@ -29,6 +29,12 @@ Please see the [project documentation](https://socketry.github.io/async-service/
 
 Please see the [project releases](https://socketry.github.io/async-service/releases/index) for all releases.
 
+### v0.18.0
+
+  - Start health checker earlier in the process. Use `#healthy!` message instead of `#ready!`.
+  - Emit prepared and running log messages with durations (e.g. how long it took to transition to prepared and running states).
+  - `Async::Service::Configuration.build{|loader|...}` can now take an argument for more flexible configuration construction.
+
 ### v0.17.0
 
   - `ManagedService` now sends `status!` messages during startup to prevent premature health check timeouts for slow-starting services.
@@ -71,11 +77,6 @@ Please see the [project releases](https://socketry.github.io/async-service/relea
 ### v0.11.0
 
   - Allow builder with argument for more flexible configuration construction.
-
-### v0.10.0
-
-  - Add `Environment::Evaluator#as_json` for JSON serialization support.
-  - Allow constructing a configuration with existing environments.
 
 ## Contributing
 
