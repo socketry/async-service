@@ -61,7 +61,7 @@ Place environments in `lib/my_library/environment/`:
 module MyLibrary
 	module Environment
 		module WebEnvironment
-			include Async::Service::ManagedEnvironment
+			include Async::Service::Managed::Environment
 			
 			def service_class
 				MyLibrary::Service::WebService
@@ -87,7 +87,7 @@ Place services in `lib/my_library/service/`:
 # lib/my_library/service/web_service.rb
 module MyLibrary
 	module Service
-		class WebService < Async::Service::ManagedService
+		class WebService < Async::Service::Managed::Service
 			private def format_title(evaluator, server)
 				if server&.respond_to?(:connection_count)
 					"#{self.name} [#{evaluator.host}:#{evaluator.port}] (#{server.connection_count} connections)"
@@ -114,7 +114,7 @@ end
 
 ### Use `Managed::Environment` for Services
 
-Include {ruby Async::Service::ManagedEnvironment} for services that need robust lifecycle management using {ruby Async::Service::ManagedService}:
+Include {ruby Async::Service::Managed::Environment} for services that need robust lifecycle management using {ruby Async::Service::Managed::Service}:
 
 ```ruby
 module WebEnvironment
@@ -201,7 +201,7 @@ end
 
 ### Use `Managed::Service` as Base Class
 
-Prefer `Async::Service::ManagedService` over `Generic` for most services:
+Prefer `Async::Service::Managed::Service` over `Generic` for most services:
 
 ```ruby
 class WebService < Async::Service::ManagedService
@@ -243,7 +243,7 @@ module WebEnvironment
 end
 ```
 
-The `startup_timeout` ensures processes that hang during startup are detected, while `health_check_timeout` monitors processes after they've become ready. `ManagedService` automatically sends `status!` messages during startup to keep the health check clock resetting until the service is ready.
+The `startup_timeout` ensures processes that hang during startup are detected, while `health_check_timeout` monitors processes after they've become ready. `Managed::Service` automatically sends `status!` messages during startup to keep the health check clock resetting until the service is ready.
 
 ### Implement Meaningful Process Titles
 

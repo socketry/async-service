@@ -73,13 +73,13 @@ module Async
 			def services(implementing: nil)
 				return to_enum(:services, implementing: implementing) unless block_given?
 				
-			@environments.each do |environment|
-				if implementing.nil? or environment.implements?(implementing)
-					if service = Generic.wrap(environment)
-						yield service
+				@environments.each do |environment|
+					if implementing.nil? or environment.implements?(implementing)
+						if service = Generic.wrap(environment)
+							yield service
+						end
 					end
 				end
-			end
 			end
 			
 			# Create a controller for the configured services.

@@ -5,10 +5,10 @@
 # Copyright, 2024-2025, by Samuel Williams.
 
 require "async/container/supervisor"
-require "async/service/managed_service"
-require "async/service/managed_environment"
+require "async/service/managed/service"
+require "async/service/managed/environment"
 
-class MemoryUsageService < Async::Service::ManagedService
+class MemoryUsageService < Async::Service::Managed::Service
 	def run(instance, evaluator)
 		things = []
 		
@@ -16,7 +16,7 @@ class MemoryUsageService < Async::Service::ManagedService
 			while true
 				sleep(rand)
 				things << " " * 1024 * 1024 * 10
-                                Console.info(self, "Allocated #{things.last.bytesize} bytes...")
+				Console.info(self, "Allocated #{things.last.bytesize} bytes...")
 			end
 		ensure
 			Fiber.blocking do
@@ -30,7 +30,7 @@ class MemoryUsageService < Async::Service::ManagedService
 end
 
 service "memory-usage" do
-	include Async::Service::ManagedEnvironment
+	include Async::Service::Managed::Environment
 	
 	service_class MemoryUsageService
 	

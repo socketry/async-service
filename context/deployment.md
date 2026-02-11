@@ -14,7 +14,7 @@ require "async/http"
 require "async/service/managed_service"
 require "async/service/managed_environment"
 
-class WebService < Async::Service::ManagedService
+class WebService < Async::Service::Managed::Service
 	def start
 		super
 		@endpoint = @evaluator.endpoint
@@ -40,7 +40,7 @@ class WebService < Async::Service::ManagedService
 end
 
 module WebEnvironment
-	include Async::Service::ManagedEnvironment
+	include Async::Service::Managed::Environment
 	
 	def endpoint
 		Async::HTTP::Endpoint.parse("http://0.0.0.0:3000")

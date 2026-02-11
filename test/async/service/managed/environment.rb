@@ -4,13 +4,13 @@
 # Copyright, 2025, by Samuel Williams.
 
 require "async/service/configuration"
-require "async/service/managed_environment"
+require "async/service/managed/environment"
 
-describe Async::Service::ManagedEnvironment do
+describe Async::Service::Managed::Environment do
 	let(:configuration) do
 		Async::Service::Configuration.build do
 			service "test-managed" do
-				include Async::Service::ManagedEnvironment
+				include Async::Service::Managed::Environment
 				
 				count 3
 				health_check_timeout 10
@@ -31,7 +31,7 @@ describe Async::Service::ManagedEnvironment do
 	it "provides default count as nil" do
 		configuration = Async::Service::Configuration.build do
 			service "test-default" do
-				include Async::Service::ManagedEnvironment
+				include Async::Service::Managed::Environment
 			end
 		end
 		
@@ -42,7 +42,7 @@ describe Async::Service::ManagedEnvironment do
 	it "provides default health_check_timeout as 30" do
 		configuration = Async::Service::Configuration.build do
 			service "test-default" do
-				include Async::Service::ManagedEnvironment
+				include Async::Service::Managed::Environment
 			end
 		end
 		
@@ -57,7 +57,7 @@ describe Async::Service::ManagedEnvironment do
 	it "compacts nil values from container_options" do
 		configuration = Async::Service::Configuration.build do
 			service "test-nil" do
-				include Async::Service::ManagedEnvironment
+				include Async::Service::Managed::Environment
 				
 				count nil
 				health_check_timeout nil
@@ -71,4 +71,3 @@ describe Async::Service::ManagedEnvironment do
 		expect(options[:restart]).to be == true
 	end
 end
-
