@@ -1,11 +1,11 @@
 # Releases
 
-## Unreleased
+## v0.19.0
 
-  - Renamed `Async::Service::GenericService` -> `Async::Service::Generic`, added compatibility alias for `GenericService`.
-  - Renamed `Async::Service::ManagedService` -> `Async::Service::Managed::Service`, added compatibility alias for `ManagedService`.
-  - Renamed `Async::Service::ManagedEnvironment` -> `Async::Service::Managed::Environment`, added compatibility alias for `ManagedEnvironment`.
-  - Renamed `Async::Service::HealthChecker` -> `Async::Service::Managed::HealthChecker`, added compatibility alias for `HealthChecker`.
+  - Renamed `Async::Service::GenericService` -\> `Async::Service::Generic`, added compatibility alias for `GenericService`.
+  - Renamed `Async::Service::ManagedService` -\> `Async::Service::Managed::Service`, added compatibility alias for `ManagedService`.
+  - Renamed `Async::Service::ManagedEnvironment` -\> `Async::Service::Managed::Environment`, added compatibility alias for `ManagedEnvironment`.
+  - Renamed `Async::Service::HealthChecker` -\> `Async::Service::Managed::HealthChecker`, added compatibility alias for `HealthChecker`.
 
 ## v0.18.1
 

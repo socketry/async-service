@@ -29,12 +29,12 @@ Please see the [project documentation](https://socketry.github.io/async-service/
 
 Please see the [project releases](https://socketry.github.io/async-service/releases/index) for all releases.
 
-### Unreleased
+### v0.19.0
 
-  - Renamed `Async::Service::GenericService` -> `Async::Service::Generic`, added compatibility alias for `GenericService`.
-  - Renamed `Async::Service::ManagedService` -> `Async::Service::Managed::Service`, added compatibility alias for `ManagedService`.
-  - Renamed `Async::Service::ManagedEnvironment` -> `Async::Service::Managed::Environment`, added compatibility alias for `ManagedEnvironment`.
-  - Renamed `Async::Service::HealthChecker` -> `Async::Service::Managed::HealthChecker`, added compatibility alias for `HealthChecker`.
+  - Renamed `Async::Service::GenericService` -\> `Async::Service::Generic`, added compatibility alias for `GenericService`.
+  - Renamed `Async::Service::ManagedService` -\> `Async::Service::Managed::Service`, added compatibility alias for `ManagedService`.
+  - Renamed `Async::Service::ManagedEnvironment` -\> `Async::Service::Managed::Environment`, added compatibility alias for `ManagedEnvironment`.
+  - Renamed `Async::Service::HealthChecker` -\> `Async::Service::Managed::HealthChecker`, added compatibility alias for `HealthChecker`.
 
 ### v0.18.1
 
@@ -80,10 +80,6 @@ Please see the [project releases](https://socketry.github.io/async-service/relea
   - Modernize code and improve documentation.
   - Make service name optional and improve code comments.
   - Add `respond_to_missing?` for completeness.
-
-### v0.12.0
-
-  - Add convenient `Configuration.build{...}` method for constructing inline configurations.
 
 ## Contributing
 
