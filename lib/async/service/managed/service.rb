@@ -8,6 +8,7 @@ require_relative "health_checker"
 
 module Async
 	module Service
+		# @namespace
 		module Managed
 			# A managed service with built-in health checking, restart policies, and process title formatting.
 			#

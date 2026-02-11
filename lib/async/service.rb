@@ -6,10 +6,3 @@
 require_relative "service/configuration"
 require_relative "service/controller"
 require_relative "service/version"
-
-# @namespace
-module Async
-	# @namespace
-	module Service
-	end
-end
