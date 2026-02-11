@@ -1,5 +1,9 @@
 # Releases
 
+## Unreleased
+
+  - Renamed `Async::Service::GenericService` -> `Async::Service::Generic`, added compatibility alias for `GenericService`.
+
 ## v0.18.1
 
   - Remove prepared and running log messages - not as useful as I imagined, and quite noisy.

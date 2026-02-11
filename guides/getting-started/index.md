@@ -37,7 +37,7 @@ Create a file called `hello_service.rb`:
 
 require 'async/service'
 
-class HelloService < Async::Service::GenericService
+class HelloService < Async::Service::Generic
 	def setup(container)
 		super
 		
@@ -82,7 +82,7 @@ Let's break down the example:
 ### Service Class
 
 ~~~ ruby
-class HelloService < Async::Service::GenericService
+class HelloService < Async::Service::Generic
 	def setup(container)
 		super
 		
@@ -95,7 +95,7 @@ class HelloService < Async::Service::GenericService
 end
 ~~~
 
-- **Inherit from `Async::Service::GenericService`**: This provides the basic service interface
+- **Inherit from `Async::Service::Generic`**: This provides the basic service interface
 - **Implement `setup(container)`**: This method configures how your service runs
 - **Call `super`**: Always call the parent's setup method
 - **Use `container.run`**: Define how many instances to run and restart behavior
@@ -146,7 +146,7 @@ You can define multiple services in a single configuration file:
 
 require 'async/service'
 
-class WebService < Async::Service::GenericService
+class WebService < Async::Service::Generic
 	def setup(container)
 		super
 		
@@ -160,7 +160,7 @@ class WebService < Async::Service::GenericService
 	end
 end
 
-class WorkerService < Async::Service::GenericService
+class WorkerService < Async::Service::Generic
 	def setup(container)
 		super
 		
@@ -224,7 +224,7 @@ Async::Service::Controller.run(configuration)
 Services automatically handle errors and provide logging:
 
 ~~~ ruby
-class RobustService < Async::Service::GenericService
+class RobustService < Async::Service::Generic
 	def setup(container)
 		super
 		
@@ -269,7 +269,7 @@ Check out the [examples](../../examples/) directory for more complex service imp
 require 'async/http/server'
 require 'async/http/endpoint'
 
-class HTTPService < Async::Service::GenericService
+class HTTPService < Async::Service::Generic
 	def setup(container)
 		super
 		
@@ -290,7 +290,7 @@ end
 ### Periodic Task Service
 
 ~~~ ruby
-class PeriodicService < Async::Service::GenericService
+class PeriodicService < Async::Service::Generic
 	def setup(container)
 		super
 		

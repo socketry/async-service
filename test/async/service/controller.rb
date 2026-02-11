@@ -4,7 +4,7 @@
 # Copyright, 2025, by Samuel Williams.
 
 require "async/service/controller"
-require "async/service/generic_service"
+require "async/service/generic"
 require "async/service/environment"
 require "async/container"
 
@@ -21,8 +21,8 @@ describe Async::Service::Controller do
 		end
 	end
 	
-	let(:service1) {Async::Service::GenericService.new(environment1)}
-	let(:service2) {Async::Service::GenericService.new(environment2)}
+	let(:service1) {Async::Service::Generic.new(environment1)}
+	let(:service2) {Async::Service::Generic.new(environment2)}
 	
 	with ".for" do
 		it "can create a controller from services" do

@@ -3,7 +3,7 @@
 # Released under the MIT License.
 # Copyright, 2025-2026, by Samuel Williams.
 
-require_relative "generic_service"
+require_relative "generic"
 require_relative "health_checker"
 
 module Async
@@ -11,7 +11,7 @@ module Async
 		# A managed service with built-in health checking, restart policies, and process title formatting.
 		#
 		# This is the recommended base class for most services that need robust lifecycle management.
-		class ManagedService < GenericService
+		class ManagedService < Generic
 			include HealthChecker
 			
 			private def format_title(evaluator, server)

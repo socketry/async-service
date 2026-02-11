@@ -3,17 +3,17 @@
 # Released under the MIT License.
 # Copyright, 2024-2025, by Samuel Williams.
 
-require "async/service/generic_service"
+require "async/service/generic"
 require "async/service/environment"
 require "console"
 require "async/container"
 
-class MyService < Async::Service::GenericService
+class MyService < Async::Service::Generic
 end
 
-describe Async::Service::GenericService do
+describe Async::Service::Generic do
 	let(:environment) {Async::Service::Environment.new}
-	let(:service) {Async::Service::GenericService.new(environment)}
+	let(:service) {Async::Service::Generic.new(environment)}
 	
 	it "can start a generic service" do
 		expect(Console).to receive(:debug).and_return(nil)
@@ -42,7 +42,7 @@ describe Async::Service::GenericService do
 		end
 		
 		it "can wrap a service and construct the right class" do
-			service = Async::Service::GenericService.wrap(environment)
+			service = Async::Service::Generic.wrap(environment)
 			expect(service).to be_a(MyService)
 		end
 	end

@@ -201,7 +201,7 @@ end
 
 ### Use `Managed::Service` as Base Class
 
-Prefer `Async::Service::ManagedService` over `GenericService` for most services:
+Prefer `Async::Service::ManagedService` over `Generic` for most services:
 
 ```ruby
 class WebService < Async::Service::ManagedService

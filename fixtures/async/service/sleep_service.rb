@@ -3,11 +3,11 @@
 # Released under the MIT License.
 # Copyright, 2025, by Samuel Williams.
 
-require "async/service/generic_service"
+require "async/service/generic"
 
 module Async
 	module Service
-		class SleepService < Async::Service::GenericService
+		class SleepService < Async::Service::Generic
 			def setup(container)
 				super
 				

@@ -82,14 +82,14 @@ end
 
 ## Service
 
-The {ruby Async::Service::GenericService} represents the service implementation layer. It handles the actual business logic of your services, provides access to configuration through environment evaluators, and manages the service lifecycle including startup, execution, and shutdown phases.
+The {ruby Async::Service::Generic} represents the service implementation layer. It handles the actual business logic of your services, provides access to configuration through environment evaluators, and manages the service lifecycle including startup, execution, and shutdown phases.
 
 ### Business Logic
 
 Services contain the actual implementation of what your service does:
 
 ```ruby
-class WebService < Async::Service::GenericService
+class WebService < Async::Service::Generic
 	def setup(container)
 		super
 		
@@ -148,7 +148,7 @@ By evaluating the log_path in the child process, you ensure that each instance h
 Services define their startup, running, and shutdown behavior:
 
 ```ruby
-class MyService < Async::Service::GenericService
+class MyService < Async::Service::Generic
 	def start
 		super
 		# Service-specific startup logic including pre-loading libraries and binding to network interfaces before forking.
@@ -264,7 +264,7 @@ end
 
 For services using `Async::Service::ManagedService`, health checking is handled automatically. The service sends `status!` messages during startup to prevent premature health check timeouts, then transitions to sending `ready!` messages once the service is actually ready.
 
-For services extending `GenericService`, you can set up health checking manually:
+For services extending `Generic`, you can set up health checking manually:
 
 ```ruby
 def setup(container)
@@ -334,7 +334,7 @@ end
 
 ```ruby
 # Services are defined using environments:
-class WebService < Async::Service::GenericService
+class WebService < Async::Service::Generic
 	def setup(container)
 		super
 		
@@ -493,7 +493,7 @@ end
 Build service hierarchies:
 
 ```ruby
-class BaseWebService < Async::Service::GenericService
+class BaseWebService < Async::Service::Generic
 	def setup(container)
 		super
 		# Common web service setup

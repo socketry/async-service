@@ -14,13 +14,13 @@ $ bundle add async-service
 
 `async-service` has several core concepts:
 
-- A {ruby Async::Service::GenericService} which represents the base class for implementing services.
+- A {ruby Async::Service::Generic} which represents the base class for implementing services.
 - A {ruby Async::Service::Configuration} which manages service configurations and environments.
 - A {ruby Async::Service::Controller} which handles starting, stopping, and managing services.
 
 ## Usage
 
-Services are long-running processes that can be managed as a group. Each service extends `Async::Service::GenericService` and implements a `setup` method that defines how the service runs.
+Services are long-running processes that can be managed as a group. Each service extends `Async::Service::Generic` and implements a `setup` method that defines how the service runs.
 
 ### Basic Service
 
@@ -31,7 +31,7 @@ Create a simple service that runs continuously:
 
 require "async/service"
 
-class HelloService < Async::Service::GenericService
+class HelloService < Async::Service::Generic
 	def setup(container)
 		super
 		
@@ -73,7 +73,7 @@ end
 In your service implementation, you can access these values through the environment and evaluator:
 
 ```ruby
-class WebServerService < Async::Service::GenericService
+class WebServerService < Async::Service::Generic
 	def setup(container)
 		super
 		
@@ -103,7 +103,7 @@ You can define multiple services in a single configuration file:
 
 require "async/service"
 
-class WebService < Async::Service::GenericService
+class WebService < Async::Service::Generic
 	def setup(container)
 		super
 		
@@ -115,7 +115,7 @@ class WebService < Async::Service::GenericService
 	end
 end
 
-class WorkerService < Async::Service::GenericService
+class WorkerService < Async::Service::Generic
 	def setup(container)
 		super
 		
