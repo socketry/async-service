@@ -26,11 +26,7 @@ module Async
 									yield(instance)
 								end
 								
-								# We deliberately create a fiber here, to confirm that fiber creation is working.
-								# If something has gone wrong with fiber allocation, we will crash here, and that's okay.
-								Fiber.new do
-									instance.healthy!
-								end.resume
+								instance.healthy!
 								
 								sleep(timeout / 2.0)
 							end
