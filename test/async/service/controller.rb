@@ -97,12 +97,5 @@ describe Async::Service::Controller do
 			controller.stop
 		end
 	end
-	
-	with ".warmup" do
-		it "can warmup without errors" do
-			# Should not raise exception
-			subject.warmup
-		end
-	end
 end
 

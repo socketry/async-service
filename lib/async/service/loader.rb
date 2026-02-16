@@ -58,6 +58,18 @@ module Async
 				
 				@configuration.add(self.environment(**options, &block))
 			end
+			
+			# Set the container policy for all services in this configuration.
+			# Can be called with either an argument or a block.
+			# @parameter value [Async::Container::Policy] The policy to use for managing child lifecycle events.
+			# @parameter block [Proc] A block that returns a policy instance.
+			def container_policy(value = nil, &block)
+				if @configuration.container_policy
+					Console.warn(self, "Container policy is already set, overriding previous value!")
+				end
+				
+				@configuration.container_policy = block_given? ? block : proc{value}
+			end
 		end
 	end
 end

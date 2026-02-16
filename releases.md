@@ -1,5 +1,12 @@
 # Releases
 
+## Unreleased
+
+  - Introduce `Async::Service::Policy` for monitoring service health and implementing failure handling strategies. Default threshold: 6 failures in 60 seconds (0.1 failures/second).
+  - Add `container_policy` configuration method for specifying custom policies in service configuration files.
+  - Add `Configuration#make_controller` (aliased as `controller`) for creating controllers with policy injection.
+  - Add `Service::Controller#make_policy` which returns `Service::Policy::DEFAULT` by default.
+
 ## v0.19.0
 
   - Renamed `Async::Service::GenericService` -\> `Async::Service::Generic`, added compatibility alias for `GenericService`.

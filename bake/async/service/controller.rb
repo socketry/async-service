@@ -10,9 +10,6 @@ def initialize(context)
 end
 
 def run
-	# Warm up the Ruby process by preloading gems and running GC.
-	Async::Service::Controller.warmup
-	
 	controller.run
 end
 
@@ -21,5 +18,5 @@ private
 def controller
 	configuration = context.lookup("async:service:configuration").instance.configuration
 	
-	return Async::Service::Controller.new(configuration.services)
+	return configuration.make_controller
 end
