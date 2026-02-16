@@ -22,11 +22,11 @@ module Async
 					# Ignore.
 				end
 				
-				if Process.respond_to?(:warmup)
-					Process.warmup
-				elsif GC.respond_to?(:compact)
-					3.times{GC.start}
-					GC.compact
+				if ::Process.respond_to?(:warmup)
+					::Process.warmup
+				elsif ::GC.respond_to?(:compact)
+					3.times{::GC.start}
+					::GC.compact
 				end
 			end
 			
