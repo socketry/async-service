@@ -10,6 +10,10 @@ files:
   title: Getting Started
   description: This guide explains how to get started with `async-service` to create
     and run services in Ruby.
+- path: policies.md
+  title: Container Policies
+  description: This guide explains how to configure container policies for your services
+    and understand the default failure handling behavior.
 - path: service-architecture.md
   title: Service Architecture
   description: This guide explains the key architectural components of `async-service`

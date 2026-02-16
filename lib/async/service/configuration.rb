@@ -52,11 +52,15 @@ module Async
 			end
 			
 			# Initialize an empty configuration.
-			def initialize(environments = [])
+			# @parameter environments [Array] Environment instances.
+			# @parameter container_policy [Proc] Optional proc that returns a policy for container lifecycle management.
+			def initialize(environments = [], container_policy: nil)
 				@environments = environments
+				@container_policy = container_policy
 			end
 			
 			attr :environments
+			attr_accessor :container_policy
 			
 			# Check if the configuration is empty.
 			# @returns [Boolean] True if no environments are configured.
@@ -84,10 +88,21 @@ module Async
 			
 			# Create a controller for the configured services.
 			#
+			# @parameter container_policy [Proc] A proc that returns the policy to use for managing child lifecycle events.
+			# @parameter options [Hash] Additional options passed to the controller.
 			# @returns [Controller] A controller that can be used to start/stop services.
-			def controller(**options)
-				Controller.new(self.services(**options).to_a)
+			def make_controller(container_policy: @container_policy, implementing: nil, **options)
+				controller = Controller.new(self.services(implementing: implementing).to_a, **options)
+				
+				if container_policy
+					controller.define_singleton_method(:make_policy, &container_policy)
+				end
+				
+				return controller
 			end
+			
+			# Alias for backwards compatibility.
+			alias controller make_controller
 			
 			# Add the environment to the configuration.
 			def add(environment)

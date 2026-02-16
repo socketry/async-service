@@ -1,8 +1,10 @@
 getting-started:
   order: 1
-service-architecture:
+policies:
   order: 2
-best-practices:
+service-architecture:
   order: 3
-deployment:
+best-practices:
   order: 4
+deployment:
+  order: 5

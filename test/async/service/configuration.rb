@@ -5,6 +5,7 @@
 
 require "async/service/configuration"
 require "async/service/good_interface"
+require "async/container/threaded"
 
 describe Async::Service::Configuration do
 	with ".build" do
@@ -121,12 +122,25 @@ describe Async::Service::Configuration do
 		end
 		
 		it "can create a controller" do
-			controller = configuration.controller
+			controller = configuration.make_controller
 			expect(controller).to be_a(Async::Service::Controller)
 			
 			expect(controller.services).to have_attributes(
 				size: be == 1
 			)
+		end
+		
+		it "make_controller returns controller with policy" do
+			controller = configuration.make_controller
+			
+			expect(controller.make_policy).to be_a(Async::Container::Policy)
+		end
+		
+		it "make_controller respects container_class option" do
+			custom_class = Async::Container::Threaded
+			controller = configuration.make_controller(container_class: custom_class)
+			
+			expect(controller.container_class).to be == custom_class
 		end
 	end
 	

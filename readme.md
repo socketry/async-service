@@ -19,6 +19,8 @@ Please see the [project documentation](https://socketry.github.io/async-service/
 
   - [Getting Started](https://socketry.github.io/async-service/guides/getting-started/index) - This guide explains how to get started with `async-service` to create and run services in Ruby.
 
+  - [Container Policies](https://socketry.github.io/async-service/guides/policies/index) - This guide explains how to configure container policies for your services and understand the default failure handling behavior.
+
   - [Service Architecture](https://socketry.github.io/async-service/guides/service-architecture/index) - This guide explains the key architectural components of `async-service` and how they work together to provide a clean separation of concerns.
 
   - [Best Practices](https://socketry.github.io/async-service/guides/best-practices/index) - This guide outlines recommended patterns and practices for building robust, maintainable services with `async-service`.
@@ -28,6 +30,13 @@ Please see the [project documentation](https://socketry.github.io/async-service/
 ## Releases
 
 Please see the [project releases](https://socketry.github.io/async-service/releases/index) for all releases.
+
+### Unreleased
+
+  - Introduce `Async::Service::Policy` for monitoring service health and implementing failure handling strategies. Default threshold: 6 failures in 60 seconds (0.1 failures/second).
+  - Add `container_policy` configuration method for specifying custom policies in service configuration files.
+  - Add `Configuration#make_controller` (aliased as `controller`) for creating controllers with policy injection.
+  - Add `Service::Controller#make_policy` which returns `Service::Policy::DEFAULT` by default.
 
 ### v0.19.0
 
@@ -73,13 +82,6 @@ Please see the [project releases](https://socketry.github.io/async-service/relea
 ### v0.14.0
 
   - Introduce `ContainerEnvironment` and `ContainerService` for implementing best-practice services.
-
-### v0.13.0
-
-  - Fix null services handling.
-  - Modernize code and improve documentation.
-  - Make service name optional and improve code comments.
-  - Add `respond_to_missing?` for completeness.
 
 ## Contributing
 
