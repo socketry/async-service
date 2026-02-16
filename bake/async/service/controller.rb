@@ -10,17 +10,8 @@ def initialize(context)
 end
 
 def run
-	begin
-		Bundler.require(:preload)
-	rescue Bundler::GemfileNotFound
-		# Ignore.
-	end
-	
-	if Process.respond_to?(:warmup)
-		Process.warmup
-	elsif GC.respond_to?(:compact)
-		GC.compact
-	end
+	# Warm up the Ruby process by preloading gems and running GC.
+	Async::Service::Controller.warmup
 	
 	controller.run
 end
