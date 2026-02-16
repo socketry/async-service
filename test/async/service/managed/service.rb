@@ -77,6 +77,10 @@ describe Async::Service::Managed::Service do
 				@ready_called = true
 			end
 			
+			def mock_instance.healthy!
+				# health_checker calls this method periodically
+			end
+			
 			def mock_instance.status!(text)
 				# status! is called during startup but doesn't need to be tracked
 			end
