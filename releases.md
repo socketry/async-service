@@ -1,6 +1,6 @@
 # Releases
 
-## Unreleased
+## v0.20.0
 
   - Introduce `Async::Service::Policy` for monitoring service health and implementing failure handling strategies. Default threshold: 6 failures in 60 seconds (0.1 failures/second).
   - Add `container_policy` configuration method for specifying custom policies in service configuration files.
