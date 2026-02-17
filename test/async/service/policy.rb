@@ -3,6 +3,7 @@
 # Released under the MIT License.
 # Copyright, 2026, by Samuel Williams.
 
+require "async/container/best"
 require "async/service/policy"
 require "async/container/statistics"
 
@@ -155,6 +156,23 @@ describe Async::Service::Policy do
 			statistics = Async::Service::Policy::DEFAULT.make_statistics
 			
 			expect(statistics.failure_rate.window).to be == 60
+		end
+	end
+	
+	with "concurrent failures" do
+		it "only stops container once when multiple children fail simultaneously" do
+			container = Async::Container.best_container_class.new(policy: policy)
+			expect(container).to receive(:stop)
+
+			# Spawn 10 children that all fail immediately:
+			10.times do |i|
+				container.spawn(name: "worker-#{i}") do |instance|
+					instance.ready!
+					exit(1)
+				end
+			end
+			
+			container.wait
 		end
 	end
 end
