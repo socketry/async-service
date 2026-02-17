@@ -31,6 +31,10 @@ Please see the [project documentation](https://socketry.github.io/async-service/
 
 Please see the [project releases](https://socketry.github.io/async-service/releases/index) for all releases.
 
+### v0.20.1
+
+  - Use `container.stopping?` in policy to prevent redundant stop calls during graceful shutdown.
+
 ### v0.20.0
 
   - Introduce `Async::Service::Policy` for monitoring service health and implementing failure handling strategies. Default threshold: 6 failures in 60 seconds (0.1 failures/second).
@@ -78,10 +82,6 @@ Please see the [project releases](https://socketry.github.io/async-service/relea
 ### v0.14.4
 
   - Use `String::Format` gem for formatting.
-
-### v0.14.0
-
-  - Introduce `ContainerEnvironment` and `ContainerService` for implementing best-practice services.
 
 ## Contributing
 

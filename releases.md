@@ -1,6 +1,6 @@
 # Releases
 
-## Unreleased
+## v0.20.1
 
   - Use `container.stopping?` in policy to prevent redundant stop calls during graceful shutdown.
 
