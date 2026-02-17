@@ -1,5 +1,9 @@
 # Releases
 
+## Unreleased
+
+  - Use `container.stopping?` in policy to prevent redundant stop calls during graceful shutdown.
+
 ## v0.20.0
 
   - Introduce `Async::Service::Policy` for monitoring service health and implementing failure handling strategies. Default threshold: 6 failures in 60 seconds (0.1 failures/second).

@@ -30,8 +30,8 @@ describe Async::Service::Policy do
 					@statistics = Async::Container::Statistics.new(window: 10)
 				end
 				
-				def running?
-					!@stopped
+				def stopping?
+					@stopped
 				end
 				
 				def stop(graceful)
@@ -60,12 +60,12 @@ describe Async::Service::Policy do
 			# 6 failures in same second = 0.6/sec which exceeds 5/10sec = 0.5/sec
 			rate = mock_container.statistics.failure_rate.per_second
 			expect(rate).to be > 0.5
-			expect(mock_container.stopped).to be == false
+			expect(mock_container).not.to be(:stopped)
 			
 			# Trigger policy check
 			policy.child_exit(mock_container, nil, mock_status, name: "test", key: nil)
 			
-			expect(mock_container.stopped).to be == true
+			expect(mock_container).to be(:stopped)
 		end
 		
 		it "does not stop container when failure rate is acceptable" do
@@ -84,7 +84,7 @@ describe Async::Service::Policy do
 			# Trigger policy check
 			policy.child_exit(mock_container, nil, mock_status, name: "test", key: nil)
 			
-			expect(mock_container.stopped).to be == false
+			expect(mock_container).not.to be(:stopped)
 		end
 		
 		it "does nothing on successful exit" do
@@ -96,7 +96,7 @@ describe Async::Service::Policy do
 			# Even with low threshold, success shouldn't trigger stop
 			policy.child_exit(mock_container, nil, success_status, name: "test", key: nil)
 			
-			expect(mock_container.stopped).to be == false
+			expect(mock_container).not.to be(:stopped)
 		end
 		
 		it "does not stop container if already stopping" do
@@ -109,14 +109,14 @@ describe Async::Service::Policy do
 			
 			# Manually stop the container first
 			mock_container.stop(true)
-			expect(mock_container.stopped).to be == true
-			expect(mock_container.running?).to be == false
+			expect(mock_container).to be(:stopped)
+			expect(mock_container).to be(:stopping?)
 			
 			# Policy should not call stop again
 			policy.child_exit(mock_container, nil, mock_status, name: "test", key: nil)
 			
-			# Container is still stopped (no error from redundant stop call)
-			expect(mock_container.stopped).to be == true
+			# Container is still stopped (no redundant stop call)
+			expect(mock_container).to be(:stopped)
 		end
 	end
 	

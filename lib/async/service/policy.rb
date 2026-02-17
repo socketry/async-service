@@ -51,8 +51,8 @@ module Async
 					rate = container.statistics.failure_rate.per_second
 					
 					if rate > @failure_rate_threshold
-						# Only stop if container is still running (avoid redundant stop calls during shutdown)
-						if container.running?
+						# Only stop if container is not already stopping
+						unless container.stopping?
 							Console.error(self, "Failure rate exceeded threshold, stopping container!",
 								rate: rate,
 								threshold: @failure_rate_threshold
