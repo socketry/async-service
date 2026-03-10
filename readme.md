@@ -31,6 +31,10 @@ Please see the [project documentation](https://socketry.github.io/async-service/
 
 Please see the [project releases](https://socketry.github.io/async-service/releases/index) for all releases.
 
+### v0.21.0
+
+  - Add missing bake files.
+
 ### v0.20.1
 
   - Use `container.stopping?` in policy to prevent redundant stop calls during graceful shutdown.
@@ -78,10 +82,6 @@ Please see the [project releases](https://socketry.github.io/async-service/relea
 
   - Rename `ContainerEnvironment` and `ContainerService` to `Managed::Environment` and `Managed::Service` respectively.
   - Health check uses `Fiber.new{instance.ready!}.resume` to confirm fiber allocation is working.
-
-### v0.14.4
-
-  - Use `String::Format` gem for formatting.
 
 ## Contributing
 
