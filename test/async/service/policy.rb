@@ -163,7 +163,7 @@ describe Async::Service::Policy do
 		it "only stops container once when multiple children fail simultaneously" do
 			container = Async::Container.best_container_class.new(policy: policy)
 			expect(container).to receive(:stop)
-
+			
 			# Spawn 10 children that all fail immediately:
 			10.times do |i|
 				container.spawn(name: "worker-#{i}") do |instance|
