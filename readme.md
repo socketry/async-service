@@ -31,6 +31,10 @@ Please see the [project documentation](https://socketry.github.io/async-service/
 
 Please see the [project releases](https://socketry.github.io/async-service/releases/index) for all releases.
 
+### v0.22.0
+
+  - Ensure process title is updated immediately after server starts in `Managed::Service`.
+
 ### v0.21.0
 
   - Add missing bake files.
@@ -77,11 +81,6 @@ Please see the [project releases](https://socketry.github.io/async-service/relea
 ### v0.15.1
 
   - `Managed::Service` should run within `Async do ... end`.
-
-### v0.15.0
-
-  - Rename `ContainerEnvironment` and `ContainerService` to `Managed::Environment` and `Managed::Service` respectively.
-  - Health check uses `Fiber.new{instance.ready!}.resume` to confirm fiber allocation is working.
 
 ## Contributing
 

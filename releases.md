@@ -1,6 +1,6 @@
 # Releases
 
-## Unreleased
+## v0.22.0
 
   - Ensure process title is updated immediately after server starts in `Managed::Service`.
 
