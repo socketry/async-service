@@ -93,6 +93,7 @@ module Async
 							evaluator = self.environment.evaluator
 							server = nil
 							
+							# If a health check timeout is configured, this block runs periodically to refresh the process title. Without a timeout there is no periodic timer, so the block is never called — the one-shot assignment below handles that case.
 							health_checker(instance, health_check_timeout) do
 								if server
 									instance.name = format_title(evaluator, server)
@@ -105,6 +106,8 @@ module Async
 							
 							instance.status!("Running...")
 							server = run(instance, evaluator)
+							# Set the process title immediately once the server is available:
+							instance.name = format_title(evaluator, server)
 							emit_running(instance, clock)
 							
 							instance.ready!

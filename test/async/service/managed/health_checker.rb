@@ -121,17 +121,14 @@ describe Async::Service::Managed::HealthChecker do
 			expect(update[0]).to be == :healthy!
 		end
 		
-		it "yields the instance if a block is given" do
+		it "does not yield the block" do
 			block_called = false
-			instance_passed = nil
 			
 			service.health_checker(instance, nil) do |inst|
 				block_called = true
-				instance_passed = inst
 			end
 			
-			expect(block_called).to be == true
-			expect(instance_passed).to be == instance
+			expect(block_called).to be == false
 		end
 		
 		it "does not create async task when parent is not async" do

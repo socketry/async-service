@@ -178,6 +178,40 @@ describe Async::Service::Managed::Service do
 			expect(options).not.to have_keys(:health_check_timeout)
 			expect(options[:restart]).to be == true
 		end
+		
+		it "updates the process title immediately even without a health check timeout" do
+			fake_server = Object.new
+			def fake_server.to_s = "fake-server"
+			
+			# Use a proper anonymous class so instance state is self-contained
+			# (avoids fragile closure captures via define_singleton_method).
+			fake_instance = Class.new do
+				def healthy! = nil
+				def ready! = nil
+				def status!(_) = nil
+				def name=(value)
+					@name = value
+				end
+				def name = @name
+			end.new
+			
+			service_with_fake_run = Class.new(Async::Service::Managed::Service) do
+				define_method(:run) {|_, _| fake_server}
+			end.new(service.environment)
+			
+			container = Async::Container.new
+			mock(container) do |mock|
+				# Call the block directly; the Async do...end inside setup creates
+				# its own reactor and runs synchronously, so the assertion is safe.
+				mock.replace(:run) do |**options, &block|
+					block.call(fake_instance)
+				end
+			end
+			
+			service_with_fake_run.setup(container)
+			
+			expect(fake_instance.name).to be == "#{service.environment.evaluator.name} fake-server"
+		end
 	end
 	
 	with "#start" do

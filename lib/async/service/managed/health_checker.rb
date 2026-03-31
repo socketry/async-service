@@ -10,32 +10,28 @@ module Async
 			module HealthChecker
 				# Start the health checker.
 				#
-				# If a timeout is specified, a transient child task will be scheduled, which will yield the instance if a block is given, then mark the instance as ready, and finally sleep for half the health check duration (so that we guarantee that the health check runs in time).
+				# If a timeout is specified, a transient child task will be scheduled which will mark the instance as healthy, sleep for half the health check duration (so that we guarantee that the health check runs in time), and then yield the instance if a block is given. This repeats indefinitely.
 				#
-				# If a timeout is not specified, the health checker will yield the instance immediately and then mark the instance as ready.
+				# If a timeout is not specified, the instance is marked as healthy immediately and no task is created. Any block given is ignored.
 				#
 				# @parameter instance [Object] The service instance to check.
 				# @parameter timeout [Numeric] The timeout duration for the health check.
 				# @parameter parent [Async::Task] The parent task to run the health checker in.
-				# @yields {|instance| ...} If a block is given, it will be called with the service instance at least once.
+				# @yields {|instance| ...} If a block is given and a timeout is specified, it will be called with the service instance after each sleep interval.
 				def health_checker(instance, timeout = @evaluator.health_check_timeout, parent: Async::Task.current, &block)
 					if timeout
 						parent.async(transient: true) do
 							while true
-								if block_given?
-									yield(instance)
-								end
-								
 								instance.healthy!
 								
 								sleep(timeout / 2.0)
+								
+								if block_given?
+									yield(instance)
+								end
 							end
 						end
 					else
-						if block_given?
-							yield(instance)
-						end
-						
 						instance.healthy!
 					end
 				end

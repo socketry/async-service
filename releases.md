@@ -1,5 +1,9 @@
 # Releases
 
+## Unreleased
+
+  - Ensure process title is updated immediately after server starts in `Managed::Service`.
+
 ## v0.21.0
 
   - Add missing bake files.
