@@ -46,4 +46,49 @@ describe Async::Service::Generic do
 			expect(service).to be_a(MyService)
 		end
 	end
+	
+	with "make_service" do
+		it "calls make_service with the environment" do
+			received_environment = nil
+			environment = Async::Service::Environment.build do
+				make_service do |environment|
+					received_environment = environment
+					MyService.new(environment)
+				end
+			end
+			
+			service = Async::Service::Generic.wrap(environment)
+			expect(service).to be_a(MyService)
+			expect(received_environment).to be_equal(environment)
+		end
+		
+		it "returns the service built by make_service" do
+			sentinel = Object.new
+			environment = Async::Service::Environment.build do
+				make_service do |environment|
+					sentinel
+				end
+			end
+			
+			expect(Async::Service::Generic.wrap(environment)).to be_equal(sentinel)
+		end
+	end
+	
+	with "make_service taking precedence over service_class" do
+		let(:environment) do
+			Async::Service::Environment.build do
+				service_class MyService
+				make_service do |environment|
+					# Returns a plain Generic, not MyService
+					Async::Service::Generic.new(environment)
+				end
+			end
+		end
+		
+		it "uses make_service when both are defined" do
+			service = Async::Service::Generic.wrap(environment)
+			expect(service).to be_a(Async::Service::Generic)
+			expect(service).not.to be_a(MyService)
+		end
+	end
 end

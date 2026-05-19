@@ -11,12 +11,19 @@ module Async
 		# Designed to be invoked within an {Async::Controller::Container}.
 		class Generic
 			# Convert the given environment into a service if possible.
+			#
+			# If the evaluator responds to `make_service`, it is called with the environment and its return value is used as the service. This allows environments to compose child environments and return a concrete service without a dedicated service class.
+			#
+			# Otherwise, the evaluator's `service_class` is instantiated with the environment and evaluator as arguments.
+			#
 			# @parameter environment [Environment] The environment to use to construct the service.
-			# @returns [Generic | Nil] The constructed service if the environment specifies a service class.
+			# @returns [Generic | Nil] The constructed service if the environment specifies a service class or make_service.
 			def self.wrap(environment)
 				evaluator = environment.evaluator
 				
-				if evaluator.key?(:service_class)
+				if evaluator.respond_to?(:make_service)
+					return evaluator.make_service(environment)
+				elsif evaluator.key?(:service_class)
 					if service_class = evaluator.service_class
 						return service_class.new(environment, evaluator)
 					end
