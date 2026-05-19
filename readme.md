@@ -31,6 +31,10 @@ Please see the [project documentation](https://socketry.github.io/async-service/
 
 Please see the [project releases](https://socketry.github.io/async-service/releases/index) for all releases.
 
+### v0.23.0
+
+  - `Async::Service::Generic.wrap` now checks for a `make_service(environment)` method on the evaluator before falling back to `service_class`. This allows environments to compose child environments and return a fully-constructed service without introducing a dedicated service class.
+
 ### v0.22.0
 
   - Ensure process title is updated immediately after server starts in `Managed::Service`.
@@ -77,10 +81,6 @@ Please see the [project releases](https://socketry.github.io/async-service/relea
   - Renamed `Async::Service::Generic` -\> `Async::Service::GenericService`, added compatibilty alias.
   - Renamed `Async::Service::Managed::Service` -\> `Async::Service::ManagedService`.
   - Renamed `Async::Service::Managed::Environment` -\> `Async::Service::ManagedEnvironment`.
-
-### v0.15.1
-
-  - `Managed::Service` should run within `Async do ... end`.
 
 ## Contributing
 

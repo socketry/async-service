@@ -1,6 +1,6 @@
 # Releases
 
-## Unreleased
+## v0.23.0
 
   - `Async::Service::Generic.wrap` now checks for a `make_service(environment)` method on the evaluator before falling back to `service_class`. This allows environments to compose child environments and return a fully-constructed service without introducing a dedicated service class.
 
