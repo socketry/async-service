@@ -91,7 +91,7 @@ module Async
 			end
 			
 			# Stop all named services.
-			def stop(graceful = true)
+			def stop(graceful = @graceful_stop)
 				@services.each do |service|
 					begin
 						service.stop

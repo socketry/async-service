@@ -96,6 +96,43 @@ describe Async::Service::Controller do
 			# Should not raise exception
 			controller.stop
 		end
+		
+		# Minimal container stub: needs a real #stop so sus's mock-super chain has a method to call into.
+		let(:container_stub_class) do
+			Class.new do
+				def stop(graceful = true); end
+			end
+		end
+		
+		it "forwards the configured graceful_stop value to the container when called with no arguments" do
+			controller = subject.new([], graceful_stop: 27.5)
+			container = container_stub_class.new
+			controller.instance_variable_set(:@container, container)
+			
+			expect(container).to receive(:stop).with(27.5)
+			
+			controller.stop
+		end
+		
+		it "forwards the default graceful_stop value (true) when no value is configured" do
+			controller = subject.new([])
+			container = container_stub_class.new
+			controller.instance_variable_set(:@container, container)
+			
+			expect(container).to receive(:stop).with(true)
+			
+			controller.stop
+		end
+		
+		it "forwards an explicit false argument unchanged (force-kill path)" do
+			controller = subject.new([], graceful_stop: 27.5)
+			container = container_stub_class.new
+			controller.instance_variable_set(:@container, container)
+			
+			expect(container).to receive(:stop).with(false)
+			
+			controller.stop(false)
+		end
 	end
 end
 
