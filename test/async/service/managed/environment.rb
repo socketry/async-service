@@ -23,6 +23,7 @@ describe Async::Service::Managed::Environment do
 	it "provides default container options" do
 		options = evaluator.container_options
 		
+		expect(options[:name]).to be == "test-managed"
 		expect(options[:restart]).to be == true
 		expect(options[:count]).to be == 3
 		expect(options[:health_check_timeout]).to be == 10

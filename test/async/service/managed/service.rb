@@ -57,9 +57,38 @@ describe Async::Service::Managed::Service do
 		
 		# Verify the container options were passed correctly
 		expect(options_captured).not.to be_nil
+		expect(options_captured[:name]).to be == "test-container"
 		expect(options_captured[:count]).to be == 2
 		expect(options_captured[:health_check_timeout]).to be == 5
 		expect(options_captured[:restart]).to be == true
+	end
+	
+	it "allows container options to override the process name" do
+		configuration = Async::Service::Configuration.build do
+			service "test-container" do
+				service_class Async::Service::Managed::Service
+				include Async::Service::Managed::Environment
+				
+				container_options do
+					super().merge(name: "custom-process-name")
+				end
+			end
+		end
+		
+		service = configuration.services.first
+		container = Async::Container.new
+		options_captured = nil
+		
+		mock(container) do |mock|
+			mock.replace(:run) do |**options, &block|
+				options_captured = options
+				nil
+			end
+		end
+		
+		service.setup(container)
+		
+		expect(options_captured[:name]).to be == "custom-process-name"
 	end
 	
 	with "integration test" do
