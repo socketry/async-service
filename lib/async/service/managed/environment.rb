@@ -36,6 +36,7 @@ module Async
 				# @returns [Hash] The options for the container.
 				def container_options
 					{
+						name: self.name,
 						restart: true,
 						count: self.count,
 						startup_timeout: self.startup_timeout,
