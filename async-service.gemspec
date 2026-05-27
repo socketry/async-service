@@ -7,7 +7,7 @@ Gem::Specification.new do |spec|
 	spec.version = Async::Service::VERSION
 	
 	spec.summary = "A service layer for Async."
-	spec.authors = ["Samuel Williams"]
+	spec.authors = ["Samuel Williams", "Udi Feldman"]
 	spec.license = "MIT"
 	
 	spec.cert_chain  = ["release.cert"]

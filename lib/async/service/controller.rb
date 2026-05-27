@@ -2,6 +2,7 @@
 
 # Released under the MIT License.
 # Copyright, 2024-2026, by Samuel Williams.
+# Copyright, 2026, by Udi Feldman.
 
 require "async/container/controller"
 require_relative "policy"
