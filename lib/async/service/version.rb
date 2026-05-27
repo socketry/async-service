@@ -7,6 +7,6 @@
 module Async
 	# @namespace
 	module Service
-		VERSION = "0.24.0"
+		VERSION = "0.24.1"
 	end
 end

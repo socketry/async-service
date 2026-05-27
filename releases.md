@@ -1,6 +1,6 @@
 # Releases
 
-## Unreleased
+## v0.24.1
 
   - Managed services now pass their service name through container options by default, restoring process titles for forked and hybrid containers.
 
