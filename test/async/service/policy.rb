@@ -6,8 +6,11 @@
 require "async/container/best"
 require "async/service/policy"
 require "async/container/statistics"
+require "container_context"
 
 describe Async::Service::Policy do
+	include ContainerContext
+	
 	let(:policy) {subject.new(maximum_failures: 5, window: 10)}
 	
 	with "::DEFAULT" do
@@ -161,18 +164,28 @@ describe Async::Service::Policy do
 	
 	with "concurrent failures" do
 		it "only stops container once when multiple children fail simultaneously" do
-			container = Async::Container.best_container_class.new(policy: policy)
-			expect(container).to receive(:stop)
-			
-			# Spawn 10 children that all fail immediately:
-			10.times do |i|
-				container.spawn(name: "worker-#{i}") do |instance|
-					instance.ready!
-					exit(1)
+			container_context do
+				container = Async::Container.best_container_class.new(policy: policy)
+				stop_count = 0
+				original_stop = container.method(:stop)
+				
+				container.define_singleton_method(:stop) do |*arguments|
+					stop_count += 1
+					original_stop.call(*arguments)
 				end
+				
+				# Spawn 10 children that all fail immediately:
+				10.times do |i|
+					container.spawn(name: "worker-#{i}") do |instance|
+						instance.ready!
+						exit(1)
+					end
+				end
+				
+				container.wait
+				
+				expect(stop_count).to be == 1
 			end
-			
-			container.wait
 		end
 	end
 end
