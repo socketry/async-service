@@ -347,6 +347,8 @@ describe Async::Service::Managed::Service do
 	end
 	
 	with "integration test with controller" do
+		include Sus::Fixtures::Async::SchedulerContext
+		
 		let(:configuration) do
 			Async::Service::Configuration.build do
 				service "test-managed" do
@@ -367,14 +369,12 @@ describe Async::Service::Managed::Service do
 		it "runs service with health checking and no restarts when async context is present" do
 			container = Async::Container.new
 			
-			begin
-				controller.setup(container)
-				controller.start
-				sleep(0.03)
-			ensure
-				controller.stop
-				container.stop
-			end
+			controller.setup(container)
+			controller.start
+			sleep(0.03)
+		ensure
+			controller.stop
+			container&.stop
 		end
 	end
 end
