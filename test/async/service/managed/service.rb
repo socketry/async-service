@@ -10,11 +10,8 @@ require "async/container"
 require "async"
 
 require "sus/fixtures/async/scheduler_context"
-require "container_context"
 
 describe Async::Service::Managed::Service do
-	include ContainerContext
-	
 	let(:configuration) do
 		Async::Service::Configuration.build do
 			service "test-container" do
@@ -350,6 +347,8 @@ describe Async::Service::Managed::Service do
 	end
 	
 	with "integration test with controller" do
+		include Sus::Fixtures::Async::SchedulerContext
+		
 		let(:configuration) do
 			Async::Service::Configuration.build do
 				service "test-managed" do
@@ -368,16 +367,14 @@ describe Async::Service::Managed::Service do
 		let(:controller) {Async::Service::Controller.for(test_service)}
 		
 		it "runs service with health checking and no restarts when async context is present" do
-			container_context do
-				container = Async::Container.new
-				
-				controller.setup(container)
-				controller.start
-				sleep(0.03)
-			ensure
-				controller.stop
-				container&.stop
-			end
+			container = Async::Container.new
+			
+			controller.setup(container)
+			controller.start
+			sleep(0.03)
+		ensure
+			controller.stop
+			container&.stop
 		end
 	end
 end
