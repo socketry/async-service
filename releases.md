@@ -1,5 +1,9 @@
 # Releases
 
+## Unreleased
+
+  - Configured preload failures now abort service startup instead of being logged and ignored, preventing services from starting with partially initialized state.
+
 ## v0.24.1
 
   - Managed services now pass their service name through container options by default, restoring process titles for forked and hybrid containers.

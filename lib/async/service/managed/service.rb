@@ -45,8 +45,6 @@ module Async
 							require(full_path)
 						end
 					end
-				rescue StandardError, LoadError => error
-					Console.warn(self, "Service preload failed!", error)
 				end
 				
 				# Start the service, including preloading resources.
