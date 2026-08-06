@@ -249,6 +249,13 @@ describe Async::Service::Managed::Service do
 			
 			service.start
 		end
+		
+		it "does not start the service when preloading fails" do
+			expect(service).to receive(:preload!).and_raise(RuntimeError, "Preload failed!")
+			expect(Console).not.to receive(:debug)
+			
+			expect{service.start}.to raise_exception(RuntimeError)
+		end
 	end
 	
 	with "#preload!" do
@@ -314,7 +321,7 @@ describe Async::Service::Managed::Service do
 			service.preload!
 		end
 		
-		it "handles preload errors gracefully" do
+		it "propagates preload errors" do
 			environment = Async::Service::Environment.build(root: root) do
 				include Async::Service::Managed::Environment
 				preload ["error.rb"]
@@ -325,10 +332,8 @@ describe Async::Service::Managed::Service do
 			
 			expect(Console).to receive(:info).and_return(nil)
 			expect(service).to receive(:require).with(File.expand_path("error.rb", root)).and_raise(error)
-			expect(Console).to receive(:warn).with(service, "Service preload failed!", error).and_return(nil)
 			
-			# Should not raise exception
-			service.preload!
+			expect{service.preload!}.to raise_exception(LoadError)
 		end
 	end
 	
