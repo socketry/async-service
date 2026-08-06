@@ -1,6 +1,6 @@
 # Releases
 
-## Unreleased
+## v0.25.0
 
   - Configured preload failures now abort service startup instead of being logged and ignored, preventing services from starting with partially initialized state.
 

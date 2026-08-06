@@ -31,6 +31,10 @@ Please see the [project documentation](https://socketry.github.io/async-service/
 
 Please see the [project releases](https://socketry.github.io/async-service/releases/index) for all releases.
 
+### v0.25.0
+
+  - Configured preload failures now abort service startup instead of being logged and ignored, preventing services from starting with partially initialized state.
+
 ### v0.24.1
 
   - Managed services now pass their service name through container options by default, restoring process titles for forked and hybrid containers.
@@ -74,11 +78,6 @@ Please see the [project releases](https://socketry.github.io/async-service/relea
   - Start health checker earlier in the process. Use `#healthy!` message instead of `#ready!`.
   - Emit prepared and running log messages with durations (e.g. how long it took to transition to prepared and running states).
   - `Async::Service::Configuration.build{|loader|...}` can now take an argument for more flexible configuration construction.
-
-### v0.17.0
-
-  - `ManagedService` now sends `status!` messages during startup to prevent premature health check timeouts for slow-starting services.
-  - Support for `startup_timeout` option via `container_options` to detect processes that hang during startup and never become ready.
 
 ## Contributing
 
